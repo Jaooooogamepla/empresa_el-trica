@@ -9,9 +9,11 @@
         .navbar a { color: white; margin: 0 15px; text-decoration: none; }
         .container { padding: 20px; max-width: 500px; }
         .setting { margin: 15px 0; }
+        button { padding: 8px 15px; cursor: pointer; }
     </style>
 </head>
 <body>
+
     <div class="navbar">
         <a href="dashboard.html">📊 Dashboard</a>
         <a href="configuracoes.html">⚙️ Configurações</a>
@@ -22,11 +24,61 @@
         
         <div class="setting">
             <h3>Notificações</h3>
-            <input type="checkbox"> Email de novos projetos<br>
-            <input type="checkbox"> Alertas de prazos
+            <input type="checkbox" id="notifProjetos"> Email de novos projetos<br>
+            <input type="checkbox" id="notifPrazos"> Alertas de prazos
         </div>
         
-        <button>💾 Salvar Configurações</button>
+        <button id="btnSalvar">💾 Salvar Configurações</button>
     </div>
+
+    <!-- ========================================== -->
+    <!--          FIREBASE - CONFIGURAÇÕES          -->
+    <!-- ========================================== -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCjdryEhdWNcWZpcIciZApYdZX5jXcST3A",
+            authDomain: "janoline-7285c.firebaseapp.com",
+            databaseURL: "https://janoline-7285c-default-rtdb.firebaseio.com",
+            projectId: "janoline-7285c",
+            storageBucket: "janoline-7285c.firebasestorage.app",
+            messagingSenderId: "688131267684",
+            appId: "1:688131267684:web:6a3d976a092512e1fad371",
+            measurementId: "G-K767JLC4BP"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // Checkboxes
+        const chkProjetos = document.getElementById("notifProjetos");
+        const chkPrazos = document.getElementById("notifPrazos");
+        const btnSalvar = document.getElementById("btnSalvar");
+
+        // Carregar configurações ao abrir a página
+        get(child(ref(db), "configuracoes"))
+        .then(snap => {
+            if (snap.exists()) {
+                const cfg = snap.val();
+                chkProjetos.checked = cfg.notifProjetos || false;
+                chkPrazos.checked = cfg.notifPrazos || false;
+            }
+        });
+
+        // Salvar configurações
+        btnSalvar.addEventListener("click", () => {
+
+            set(ref(db, "configuracoes"), {
+                notifProjetos: chkProjetos.checked,
+                notifPrazos: chkPrazos.checked
+            })
+            .then(() => alert("Configurações salvas!"))
+            .catch(err => alert("Erro ao salvar: " + err));
+        });
+
+    </script>
+
 </body>
 </html>

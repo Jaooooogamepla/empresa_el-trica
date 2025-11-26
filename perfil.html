@@ -9,6 +9,7 @@
         .navbar a { color: white; margin: 0 15px; text-decoration: none; }
         .container { padding: 20px; max-width: 500px; }
         .profile { text-align: center; }
+        button { padding: 10px 20px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -20,15 +21,101 @@
     <div class="container">
         <div class="profile">
             <h1>👤 Meu Perfil</h1>
-            <div style="background: #3498db; color: white; padding: 20px; border-radius: 50%; width: 100px; height: 100px; margin: 0 auto; line-height: 60px; font-size: 40px;">
+
+            <div id="fotoPerfil" style="background: #3498db; color: white; padding: 20px; border-radius: 50%; width: 100px; height: 100px; margin: 0 auto; line-height: 60px; font-size: 40px;">
                 MS
             </div>
-            <h2>Maria Silva</h2>
-            <p><strong>Cargo:</strong> Eletricista</p>
-            <p><strong>Email:</strong> maria@janolinej.com</p>
-            <p><strong>CREA:</strong> 12345-SP</p>
-            <button>✏️ Editar Perfil</button>
+
+            <h2 id="nomeUsuario">Maria Silva</h2>
+
+            <p><strong>Cargo:</strong> <span id="cargoUsuario">Eletricista</span></p>
+            <p><strong>Email:</strong> <span id="emailUsuario">maria@janolinej.com</span></p>
+            <p><strong>CREA:</strong> <span id="creaUsuario">12345-SP</span></p>
+
+            <button id="btnEditar">✏️ Editar Perfil</button>
         </div>
     </div>
+
+    <!-- ================================= -->
+    <!--     FIREBASE - PERFIL LIGADO      -->
+    <!-- ================================= -->
+    <script type="module">
+
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCjdryEhdWNcWZpcIciZApYdZX5jXcST3A",
+            authDomain: "janoline-7285c.firebaseapp.com",
+            databaseURL: "https://janoline-7285c-default-rtdb.firebaseio.com",
+            projectId: "janoline-7285c",
+            storageBucket: "janoline-7285c.firebasestorage.app",
+            messagingSenderId: "688131267684",
+            appId: "1:688131267684:web:6a3d976a092512e1fad371",
+            measurementId: "G-K767JLC4BP"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // Elementos HTML
+        const nome = document.getElementById("nomeUsuario");
+        const cargo = document.getElementById("cargoUsuario");
+        const email = document.getElementById("emailUsuario");
+        const crea = document.getElementById("creaUsuario");
+        const foto = document.getElementById("fotoPerfil");
+        const btnEditar = document.getElementById("btnEditar");
+
+        // Carregar perfil salvo no Firebase
+        const perfilRef = ref(db, "perfil");
+
+        get(child(ref(db), "perfil")).then(snapshot => {
+            if (snapshot.exists()) {
+                const p = snapshot.val();
+
+                nome.textContent = p.nome;
+                cargo.textContent = p.cargo;
+                email.textContent = p.email;
+                crea.textContent = p.crea;
+                foto.textContent = p.iniciais;
+
+            } else {
+                console.log("Nenhum perfil encontrado.");
+            }
+        });
+
+        // Editar perfil
+        btnEditar.addEventListener("click", () => {
+
+            const novoNome = prompt("Nome completo:", nome.textContent);
+            const novoCargo = prompt("Cargo:", cargo.textContent);
+            const novoEmail = prompt("Email:", email.textContent);
+            const novoCrea = prompt("CREA:", crea.textContent);
+
+            if (!novoNome || !novoCargo || !novoEmail || !novoCrea) {
+                alert("Preencha todos os campos!");
+                return;
+            }
+
+            // Gerar iniciais automaticamente
+            const iniciais = novoNome.split(" ").map(n => n[0]).join("").toUpperCase().substring(0, 2);
+
+            // Salvar no banco
+            set(ref(db, "perfil"), {
+                nome: novoNome,
+                cargo: novoCargo,
+                email: novoEmail,
+                crea: novoCrea,
+                iniciais: iniciais
+            })
+            .then(() => {
+                alert("Perfil atualizado com sucesso!");
+                location.reload(); // Recarrega página para atualizar os dados
+            })
+            .catch(err => alert("Erro ao salvar: " + err));
+        });
+
+    </script>
+
 </body>
 </html>

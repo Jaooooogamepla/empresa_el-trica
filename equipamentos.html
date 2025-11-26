@@ -9,9 +9,11 @@
         .navbar a { color: white; margin: 0 15px; text-decoration: none; }
         .container { padding: 20px; }
         .card { background: #f9f9f9; padding: 15px; margin: 10px 0; border-radius: 5px; }
+        button { padding: 8px 15px; cursor: pointer; }
     </style>
 </head>
 <body>
+
     <div class="navbar">
         <a href="dashboard.html">📊 Dashboard</a>
         <a href="equipamentos.html">🔧 Equipamentos</a>
@@ -19,13 +21,85 @@
 
     <div class="container">
         <h1>🔧 Equipamentos</h1>
-        <button>➕ Novo Equipamento</button>
+        <button id="btnNovo">➕ Novo Equipamento</button>
         
-        <div class="card">
-            <h3>Gerador 50kVA</h3>
-            <p>Nº Série: GEN001</p>
-            <p><strong>Status:</strong> Disponível</p>
+        <div id="listaEquipamentos">
+            <!-- Equipamentos serão carregados aqui -->
         </div>
     </div>
+
+    <!-- ========================================== -->
+    <!--     FIREBASE - EQUIPAMENTOS CONECTADO      -->
+    <!-- ========================================== -->
+    <script type="module">
+
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCjdryEhdWNcWZpcIciZApYdZX5jXcST3A",
+            authDomain: "janoline-7285c.firebaseapp.com",
+            databaseURL: "https://janoline-7285c-default-rtdb.firebaseio.com",
+            projectId: "janoline-7285c",
+            storageBucket: "janoline-7285c.firebasestorage.app",
+            messagingSenderId: "688131267684",
+            appId: "1:688131267684:web:6a3d976a092512e1fad371",
+            measurementId: "G-K767JLC4BP"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        const lista = document.getElementById("listaEquipamentos");
+        const btnNovo = document.getElementById("btnNovo");
+
+        // Criar novo equipamento
+        btnNovo.addEventListener("click", () => {
+            const nome = prompt("Nome do equipamento:");
+            const serie = prompt("Número de série:");
+            const status = prompt("Status (Disponível / Em uso / Quebrado / Em manutenção):");
+
+            if (!nome || !serie || !status) {
+                alert("Preencha todos os campos!");
+                return;
+            }
+
+            const id = Date.now();
+
+            set(ref(db, "equipamentos/" + id), {
+                nome,
+                serie,
+                status
+            })
+            .then(() => alert("Equipamento cadastrado com sucesso!"))
+            .catch(err => alert("Erro ao salvar: " + err));
+        });
+
+        // Carregar equipamentos automaticamente
+        const eqpRef = ref(db, "equipamentos/");
+
+        onValue(eqpRef, (snapshot) => {
+            lista.innerHTML = ""; // Limpa antes de carregar
+
+            if (!snapshot.exists()) return;
+
+            const dados = snapshot.val();
+
+            Object.values(dados).forEach(eq => {
+                const card = document.createElement("div");
+                card.classList.add("card");
+
+                card.innerHTML = `
+                    <h3>${eq.nome}</h3>
+                    <p>Nº Série: ${eq.serie}</p>
+                    <p><strong>Status:</strong> ${eq.status}</p>
+                `;
+
+                lista.appendChild(card);
+            });
+        });
+
+    </script>
+
 </body>
 </html>

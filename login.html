@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Janol.Inej</title>
+
     <style>
         * {
             margin: 0;
@@ -98,6 +99,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="login-container">
         <div class="logo">🏗️ JANOL.INEJ</div>
@@ -106,12 +108,12 @@
         <form id="loginForm">
             <div class="form-group">
                 <label>📧 Email</label>
-                <input type="email" placeholder="seu@email.com" required>
+                <input type="email" id="email" placeholder="seu@email.com" required>
             </div>
             
             <div class="form-group">
                 <label>🔒 Senha</label>
-                <input type="password" placeholder="Sua senha" required>
+                <input type="password" id="senha" placeholder="Sua senha" required>
             </div>
             
             <button type="submit" class="btn">🚀 Entrar no Sistema</button>
@@ -123,12 +125,53 @@
         </div>
     </div>
 
-    <script>
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
+    <!-- ========================= -->
+    <!--     FIREBASE + LOGIN      -->
+    <!-- ========================= -->
+    <script type="module">
+
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCjdryEhdWNcWZpcIciZApYdZX5jXcST3A",
+            authDomain: "janoline-7285c.firebaseapp.com",
+            databaseURL: "https://janoline-7285c-default-rtdb.firebaseio.com",
+            projectId: "janoline-7285c",
+            storageBucket: "janoline-7285c.firebasestorage.app",
+            messagingSenderId: "688131267684",
+            appId: "1:688131267684:web:6a3d976a092512e1fad371",
+            measurementId: "G-K767JLC4BP"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        const form = document.getElementById("loginForm");
+        const email = document.getElementById("email");
+        const senha = document.getElementById("senha");
+
+        form.addEventListener("submit", function(e) {
             e.preventDefault();
-            alert('Login realizado com sucesso! Redirecionando...');
-            window.location.href = 'dashboard.html';
+
+            const emailVal = email.value;
+            const senhaVal = senha.value;
+
+            // Salvar login no Realtime Database
+            set(ref(db, "logins/" + Date.now()), {
+                email: emailVal,
+                senha: senhaVal
+            })
+            .then(() => {
+                alert("Login realizado e salvo no Firebase!");
+                window.location.href = "dashboard.html";
+            })
+            .catch((err) => {
+                alert("Erro ao salvar: " + err);
+            });
         });
+
     </script>
+
 </body>
 </html>

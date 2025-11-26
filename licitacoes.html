@@ -9,9 +9,11 @@
         .navbar a { color: white; margin: 0 15px; text-decoration: none; }
         .container { padding: 20px; }
         .card { background: #f9f9f9; padding: 15px; margin: 10px 0; border-radius: 5px; }
+        button { padding: 8px 15px; cursor: pointer; }
     </style>
 </head>
 <body>
+
     <div class="navbar">
         <a href="dashboard.html">📊 Dashboard</a>
         <a href="licitacoes.html">📑 Licitações</a>
@@ -19,13 +21,87 @@
 
     <div class="container">
         <h1>📑 Licitações Governamentais</h1>
-        <button>➕ Nova Licitação</button>
+        <button id="novaLicitacao">➕ Nova Licitação</button>
         
-        <div class="card">
-            <h3>Edital 001 - Prefeitura</h3>
-            <p>Instalação Elétrica Escola Municipal</p>
-            <p><strong>Status:</strong> Aberta</p>
+        <div id="listaLicitacoes">
+            <!-- Licitações serão carregadas aqui -->
         </div>
     </div>
+
+    <!-- ======================================== -->
+    <!--   FIREBASE - LICITAÇÕES CONECTADAS       -->
+    <!-- ======================================== -->
+    <script type="module">
+
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCjdryEhdWNcWZpcIciZApYdZX5jXcST3A",
+            authDomain: "janoline-7285c.firebaseapp.com",
+            databaseURL: "https://janoline-7285c-default-rtdb.firebaseio.com",
+            projectId: "janoline-7285c",
+            storageBucket: "janoline-7285c.firebasestorage.app",
+            messagingSenderId: "688131267684",
+            appId: "1:688131267684:web:6a3d976a092512e1fad371",
+            measurementId: "G-K767JLC4BP"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        const lista = document.getElementById("listaLicitacoes");
+        const btnNova = document.getElementById("novaLicitacao");
+
+        // Criar nova licitação
+        btnNova.addEventListener("click", () => {
+
+            const titulo = prompt("Título do edital (ex: Edital 001 - Prefeitura):");
+            const descricao = prompt("Descrição do projeto:");
+            const status = prompt("Status (Aberta, Em andamento, Finalizada):");
+
+            if (!titulo || !descricao || !status) {
+                alert("Preencha todos os campos!");
+                return;
+            }
+
+            const id = Date.now();
+
+            set(ref(db, "licitacoes/" + id), {
+                titulo,
+                descricao,
+                status
+            })
+            .then(() => alert("Licitação cadastrada com sucesso!"))
+            .catch(err => alert("Erro ao salvar: " + err));
+        });
+
+        // Carregar licitações automaticamente
+        const licRef = ref(db, "licitacoes/");
+        onValue(licRef, (snapshot) => {
+
+            lista.innerHTML = ""; // limpar antes do carregamento
+
+            if (!snapshot.exists()) return;
+
+            const dados = snapshot.val();
+
+            Object.values(dados).forEach(l => {
+
+                const card = document.createElement("div");
+                card.classList.add("card");
+
+                card.innerHTML = `
+                    <h3>${l.titulo}</h3>
+                    <p>${l.descricao}</p>
+                    <p><strong>Status:</strong> ${l.status}</p>
+                `;
+
+                lista.appendChild(card);
+            });
+        });
+
+    </script>
+
 </body>
 </html>

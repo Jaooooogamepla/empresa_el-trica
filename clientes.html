@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastrar Cliente - Janol.Inej</title>
+
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background: #f8f9fa; }
@@ -28,11 +29,30 @@
         .btn-primary { background: linear-gradient(135deg, #27ae60, #219a52); color: white; }
         .btn-secondary { background: #95a5a6; color: white; }
         .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+
         .form-message { padding: 15px; border-radius: 10px; margin-top: 20px; text-align: center; display: none; }
         .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
         .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+
+        /* Botão excluir */
+        .btn-delete {
+            width: 100%;
+            margin-top: 15px;
+            padding: 15px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn-delete:hover {
+            background: #c0392b;
+        }
     </style>
 </head>
+
 <body>
 
     <nav class="navbar">
@@ -55,34 +75,35 @@
 
             <form id="clienteForm">
                 <div class="form-grid">
+
                     <div class="form-group">
                         <label>📛 Nome Completo / Razão Social</label>
-                        <input type="text" id="nome" placeholder="João Silva Construtora" required>
+                        <input id="nome" type="text" required>
                     </div>
 
                     <div class="form-group">
                         <label>🔢 CNPJ / CPF</label>
-                        <input type="text" id="documento" placeholder="00.000.000/0000-00" required>
+                        <input id="documento" type="text" required>
                     </div>
 
                     <div class="form-group">
                         <label>📞 Telefone</label>
-                        <input type="tel" id="telefone" placeholder="(11) 99999-9999" required>
+                        <input id="telefone" type="tel" required>
                     </div>
 
                     <div class="form-group">
                         <label>📧 Email</label>
-                        <input type="email" id="email" placeholder="cliente@email.com" required>
+                        <input id="email" type="email" required>
                     </div>
 
                     <div class="form-group full-width">
                         <label>🏠 Endereço</label>
-                        <input type="text" id="endereco" placeholder="Rua, Número, Bairro" required>
+                        <input id="endereco" type="text" required>
                     </div>
 
                     <div class="form-group">
                         <label>🏙️ Cidade</label>
-                        <input type="text" id="cidade" placeholder="São Paulo" required>
+                        <input id="cidade" type="text" required>
                     </div>
 
                     <div class="form-group">
@@ -97,31 +118,30 @@
 
                     <div class="form-group full-width">
                         <label>💬 Observações</label>
-                        <textarea id="obs" placeholder="Observações sobre o cliente..." rows="3"></textarea>
+                        <textarea id="obs" rows="3"></textarea>
                     </div>
                 </div>
 
                 <div class="btn-group">
-                    <button type="button" class="btn btn-secondary" onclick="window.location.href='clientes.html'">
-                        ↩️ Cancelar
-                    </button>
-                    <button type="submit" class="btn btn-primary">
-                        💾 Salvar Cliente
-                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="window.location.href='clientes.html'">↩️ Cancelar</button>
+                    <button type="submit" class="btn btn-primary" id="btnSalvar">💾 Salvar Cliente</button>
                 </div>
             </form>
 
             <div id="formMessage" class="form-message"></div>
+
+            <!-- Botão excluir aparece apenas no modo edição -->
+            <button id="btnExcluir" class="btn-delete" style="display:none;">🗑️ Excluir Cliente</button>
+
         </div>
     </div>
 
     <!-- =================================== -->
-    <!--        FIREBASE - CLIENTES          -->
+    <!--     FIREBASE - CRUD CLIENTES        -->
     <!-- =================================== -->
     <script type="module">
-
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getDatabase, ref, set, get, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCjdryEhdWNcWZpcIciZApYdZX5jXcST3A",
@@ -137,9 +157,42 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
+        const params = new URLSearchParams(window.location.search);
+        const clienteId = params.get("id");
+
         const form = document.getElementById("clienteForm");
         const msg = document.getElementById("formMessage");
+        const btnSalvar = document.getElementById("btnSalvar");
+        const btnExcluir = document.getElementById("btnExcluir");
 
+        // ================================
+        //  SE FOR EDIÇÃO → CARREGAR DADOS
+        // ================================
+        if (clienteId) {
+            btnSalvar.textContent = "💾 Salvar Alterações";
+            btnExcluir.style.display = "block";
+            carregarCliente(clienteId);
+        }
+
+        function carregarCliente(id) {
+            get(ref(db, "clientes/" + id)).then(snapshot => {
+                if (!snapshot.exists()) return;
+
+                const c = snapshot.val();
+                document.getElementById("nome").value = c.nome;
+                document.getElementById("documento").value = c.documento;
+                document.getElementById("telefone").value = c.telefone;
+                document.getElementById("email").value = c.email;
+                document.getElementById("endereco").value = c.endereco;
+                document.getElementById("cidade").value = c.cidade;
+                document.getElementById("estado").value = c.estado;
+                document.getElementById("obs").value = c.observacoes;
+            });
+        }
+
+        // ================================
+        //   CADASTRAR OU EDITAR CLIENTE
+        // ================================
         form.addEventListener("submit", (e) => {
             e.preventDefault();
 
@@ -154,24 +207,35 @@
                 observacoes: document.getElementById("obs").value
             };
 
-            const id = Date.now();
+            const id = clienteId ? clienteId : Date.now();
 
             set(ref(db, "clientes/" + id), cliente)
-            .then(() => {
-                msg.className = "form-message success";
-                msg.textContent = "✅ Cliente cadastrado com sucesso!";
-                msg.style.display = "block";
+                .then(() => {
+                    msg.className = "form-message success";
+                    msg.textContent = clienteId ? "✔ Alterações salvas!" : "✔ Cliente cadastrado!";
+                    msg.style.display = "block";
 
-                setTimeout(() => {
+                    setTimeout(() => window.location.href = "clientes.html", 1500);
+                })
+                .catch(err => {
+                    msg.className = "form-message error";
+                    msg.textContent = "❌ Erro: " + err;
+                    msg.style.display = "block";
+                });
+        });
+
+        // ================================
+        //        EXCLUIR CLIENTE
+        // ================================
+        btnExcluir.addEventListener("click", () => {
+            if (!confirm("Tem certeza que deseja excluir este cliente?")) return;
+
+            remove(ref(db, "clientes/" + clienteId))
+                .then(() => {
+                    alert("Cliente excluído com sucesso!");
                     window.location.href = "clientes.html";
-                }, 1500);
-            })
-            .catch((err) => {
-                msg.className = "form-message error";
-                msg.textContent = "❌ Erro ao salvar: " + err;
-                msg.style.display = "block";
-            });
-
+                })
+                .catch(err => alert("Erro ao excluir: " + err));
         });
 
     </script>

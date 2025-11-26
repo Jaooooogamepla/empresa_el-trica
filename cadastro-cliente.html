@@ -5,167 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastrar Cliente - Janol.Inej</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background: #f8f9fa;
-        }
-
-        .navbar {
-            background: linear-gradient(135deg, #2c3e50, #34495e);
-            color: white;
-            padding: 0 20px;
-        }
-
-        .nav-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 15px 0;
-        }
-
-        .logo {
-            font-size: 1.8em;
-            font-weight: bold;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 30px;
-        }
-
-        .nav-links a {
-            color: white;
-            text-decoration: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            transition: background 0.3s;
-        }
-
-        .nav-links a:hover {
-            background: rgba(255,255,255,0.1);
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 30px auto;
-            padding: 0 20px;
-        }
-
-        .form-card {
-            background: white;
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-
-        .form-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .form-header h1 {
-            color: #2c3e50;
-            margin-bottom: 10px;
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group.full-width {
-            grid-column: 1 / -1;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: #2c3e50;
-            font-weight: 600;
-        }
-
-        input, select, textarea {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 16px;
-            transition: all 0.3s;
-        }
-
-        input:focus, select:focus, textarea:focus {
-            border-color: #3498db;
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
-        }
-
-        .btn-group {
-            grid-column: 1 / -1;
-            display: flex;
-            gap: 15px;
-            margin-top: 30px;
-        }
-
-        .btn {
-            flex: 1;
-            padding: 15px;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #27ae60, #219a52);
-            color: white;
-        }
-
-        .btn-secondary {
-            background: #95a5a6;
-            color: white;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-
-        .form-message {
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 20px;
-            text-align: center;
-            display: none;
-        }
-
-        .success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-
-        .error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: #f8f9fa; }
+        .navbar { background: linear-gradient(135deg, #2c3e50, #34495e); color: white; padding: 0 20px; }
+        .nav-content { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; padding: 15px 0; }
+        .logo { font-size: 1.8em; font-weight: bold; }
+        .nav-links { display: flex; gap: 30px; }
+        .nav-links a { color: white; text-decoration: none; padding: 10px 20px; border-radius: 8px; transition: background 0.3s; }
+        .nav-links a:hover { background: rgba(255,255,255,0.1); }
+        .container { max-width: 800px; margin: 30px auto; padding: 0 20px; }
+        .form-card { background: white; padding: 40px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .form-header { text-align: center; margin-bottom: 30px; }
+        .form-header h1 { color: #2c3e50; margin-bottom: 10px; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group.full-width { grid-column: 1 / -1; }
+        label { display: block; margin-bottom: 8px; color: #2c3e50; font-weight: 600; }
+        input, select, textarea { width: 100%; padding: 15px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 16px; transition: all 0.3s; }
+        input:focus, select:focus, textarea:focus { border-color: #3498db; outline: none; box-shadow: 0 0 0 3px rgba(52,152,219,0.1); }
+        .btn-group { grid-column: 1 / -1; display: flex; gap: 15px; margin-top: 30px; }
+        .btn { flex: 1; padding: 15px; border: none; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s; }
+        .btn-primary { background: linear-gradient(135deg, #27ae60, #219a52); color: white; }
+        .btn-secondary { background: #95a5a6; color: white; }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        .form-message { padding: 15px; border-radius: 10px; margin-top: 20px; text-align: center; display: none; }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
     </style>
 </head>
+
 <body>
     <nav class="navbar">
         <div class="nav-content">
@@ -187,39 +55,40 @@
 
             <form id="clienteForm">
                 <div class="form-grid">
+
                     <div class="form-group">
                         <label>📛 Nome Completo / Razão Social</label>
-                        <input type="text" placeholder="João Silva Construtora" required>
+                        <input id="nome" type="text" placeholder="João Silva Construtora" required>
                     </div>
 
                     <div class="form-group">
                         <label>🔢 CNPJ / CPF</label>
-                        <input type="text" placeholder="00.000.000/0000-00" required>
+                        <input id="documento" type="text" placeholder="00.000.000/0000-00" required>
                     </div>
 
                     <div class="form-group">
                         <label>📞 Telefone</label>
-                        <input type="tel" placeholder="(11) 99999-9999" required>
+                        <input id="telefone" type="tel" placeholder="(11) 99999-9999" required>
                     </div>
 
                     <div class="form-group">
                         <label>📧 Email</label>
-                        <input type="email" placeholder="cliente@email.com" required>
+                        <input id="email" type="email" placeholder="cliente@email.com" required>
                     </div>
 
                     <div class="form-group full-width">
                         <label>🏠 Endereço</label>
-                        <input type="text" placeholder="Rua, Número, Bairro" required>
+                        <input id="endereco" type="text" placeholder="Rua, Número, Bairro" required>
                     </div>
 
                     <div class="form-group">
                         <label>🏙️ Cidade</label>
-                        <input type="text" placeholder="São Paulo" required>
+                        <input id="cidade" type="text" placeholder="São Paulo" required>
                     </div>
 
                     <div class="form-group">
                         <label>🎌 Estado</label>
-                        <select required>
+                        <select id="estado" required>
                             <option value="">Selecione...</option>
                             <option value="SP">São Paulo</option>
                             <option value="RJ">Rio de Janeiro</option>
@@ -229,8 +98,9 @@
 
                     <div class="form-group full-width">
                         <label>💬 Observações</label>
-                        <textarea placeholder="Observações sobre o cliente..." rows="3"></textarea>
+                        <textarea id="obs" placeholder="Observações sobre o cliente..." rows="3"></textarea>
                     </div>
+
                 </div>
 
                 <div class="btn-group">
@@ -247,22 +117,65 @@
         </div>
     </div>
 
-    <script>
-        document.getElementById('clienteForm').addEventListener('submit', function(e) {
+    <!-- =================================== -->
+    <!--     FIREBASE - SALVAR CLIENTE       -->
+    <!-- =================================== -->
+    <script type="module">
+
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCjdryEhdWNcWZpcIciZApYdZX5jXcST3A",
+            authDomain: "janoline-7285c.firebaseapp.com",
+            databaseURL: "https://janoline-7285c-default-rtdb.firebaseio.com",
+            projectId: "janoline-7285c",
+            storageBucket: "janoline-7285c.firebasestorage.app",
+            messagingSenderId: "688131267684",
+            appId: "1:688131267684:web:6a3d976a092512e1fad371",
+            measurementId: "G-K767JLC4BP"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        const form = document.getElementById("clienteForm");
+        const msg = document.getElementById("formMessage");
+
+        form.addEventListener("submit", (e) => {
             e.preventDefault();
-            
-            const messageDiv = document.getElementById('formMessage');
-            messageDiv.className = 'form-message success';
-            messageDiv.textContent = '✅ Cliente cadastrado com sucesso!';
-            messageDiv.style.display = 'block';
-            
-            // Limpar formulário
-            setTimeout(() => {
-                this.reset();
-                messageDiv.style.display = 'none';
-                window.location.href = 'clientes.html';
-            }, 2000);
+
+            const cliente = {
+                nome: document.getElementById("nome").value,
+                documento: document.getElementById("documento").value,
+                telefone: document.getElementById("telefone").value,
+                email: document.getElementById("email").value,
+                endereco: document.getElementById("endereco").value,
+                cidade: document.getElementById("cidade").value,
+                estado: document.getElementById("estado").value,
+                observacoes: document.getElementById("obs").value
+            };
+
+            const id = Date.now();
+
+            set(ref(db, "clientes/" + id), cliente)
+            .then(() => {
+                msg.className = "form-message success";
+                msg.textContent = "✅ Cliente cadastrado com sucesso!";
+                msg.style.display = "block";
+
+                setTimeout(() => {
+                    window.location.href = "clientes.html";
+                }, 1500);
+            })
+            .catch((err) => {
+                msg.className = "form-message error";
+                msg.textContent = "❌ Erro ao salvar: " + err;
+                msg.style.display = "block";
+            });
         });
+
     </script>
+
 </body>
 </html>

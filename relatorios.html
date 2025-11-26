@@ -9,6 +9,7 @@
         .navbar a { color: white; margin: 0 15px; text-decoration: none; }
         .container { padding: 20px; }
         .card { background: #f9f9f9; padding: 15px; margin: 10px 0; border-radius: 5px; }
+        button { padding: 8px 15px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -23,14 +24,67 @@
         <div class="card">
             <h3>📊 Relatório Financeiro</h3>
             <p>Faturamento mensal e custos</p>
-            <button>Gerar Relatório</button>
+            <button id="btnFinanceiro">Gerar Relatório</button>
         </div>
         
         <div class="card">
             <h3>👥 Relatório de Produtividade</h3>
             <p>Desempenho da equipe</p>
-            <button>Gerar Relatório</button>
+            <button id="btnProdutividade">Gerar Relatório</button>
         </div>
     </div>
+
+    <!-- ============================= -->
+    <!--   FIREBASE - RELATÓRIOS       -->
+    <!-- ============================= -->
+    <script type="module">
+
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCjdryEhdWNcWZpcIciZApYdZX5jXcST3A",
+            authDomain: "janoline-7285c.firebaseapp.com",
+            databaseURL: "https://janoline-7285c-default-rtdb.firebaseio.com",
+            projectId: "janoline-7285c",
+            storageBucket: "janoline-7285c.firebasestorage.app",
+            messagingSenderId: "688131267684",
+            appId: "1:688131267684:web:6a3d976a092512e1fad371",
+            measurementId: "G-K767JLC4BP"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // Botões
+        const btnFinanceiro = document.getElementById("btnFinanceiro");
+        const btnProd = document.getElementById("btnProdutividade");
+
+        // Registrar relatório financeiro
+        btnFinanceiro.addEventListener("click", () => {
+            set(ref(db, "relatorios/financeiro/" + Date.now()), {
+                tipo: "Relatório Financeiro",
+                data: new Date().toLocaleString()
+            })
+            .then(() => {
+                alert("📊 Relatório financeiro registrado no Firebase!");
+            })
+            .catch(err => alert("Erro: " + err));
+        });
+
+        // Registrar relatório de produtividade
+        btnProd.addEventListener("click", () => {
+            set(ref(db, "relatorios/produtividade/" + Date.now()), {
+                tipo: "Relatório de Produtividade",
+                data: new Date().toLocaleString()
+            })
+            .then(() => {
+                alert("👥 Relatório de produtividade registrado no Firebase!");
+            })
+            .catch(err => alert("Erro: " + err));
+        });
+
+    </script>
+
 </body>
 </html>

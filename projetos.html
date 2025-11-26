@@ -11,6 +11,7 @@
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
         th { background: #f2f2f2; }
+        button { padding: 8px 15px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -22,22 +23,104 @@
 
     <div class="container">
         <h1>🏗️ Projetos</h1>
-        <button>➕ Novo Projeto</button>
+        <button id="novoProjeto">➕ Novo Projeto</button>
         
-        <table>
+        <table id="tabelaProjetos">
             <tr>
                 <th>Nome</th>
                 <th>Cliente</th>
                 <th>Status</th>
                 <th>Orçamento</th>
             </tr>
-            <tr>
-                <td>Instalação Predial</td>
-                <td>João Silva</td>
-                <td>Em Andamento</td>
-                <td>R$ 25.000</td>
-            </tr>
+
+            <!-- Linha exemplo removida, agora carregado do Firebase -->
         </table>
     </div>
+
+    <!-- ================================= -->
+    <!--   FIREBASE - PROJETOS LIGADOS     -->
+    <!-- ================================= -->
+    <script type="module">
+
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCjdryEhdWNcWZpcIciZApYdZX5jXcST3A",
+            authDomain: "janoline-7285c.firebaseapp.com",
+            databaseURL: "https://janoline-7285c-default-rtdb.firebaseio.com",
+            projectId: "janoline-7285c",
+            storageBucket: "janoline-7285c.firebasestorage.app",
+            messagingSenderId: "688131267684",
+            appId: "1:688131267684:web:6a3d976a092512e1fad371",
+            measurementId: "G-K767JLC4BP"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        const btnNovoProjeto = document.getElementById("novoProjeto");
+        const tabela = document.getElementById("tabelaProjetos");
+
+        // Criar novo projeto no Firebase
+        btnNovoProjeto.addEventListener("click", () => {
+            const nome = prompt("Nome do Projeto:");
+            const cliente = prompt("Nome do Cliente:");
+            const status = prompt("Status do Projeto:");
+            const orcamento = prompt("Orçamento (ex: R$ 10.000):");
+
+            if (!nome || !cliente || !status || !orcamento) {
+                alert("Preencha todos os campos!");
+                return;
+            }
+
+            const id = Date.now();
+
+            set(ref(db, "projetos/" + id), {
+                nome,
+                cliente,
+                status,
+                orcamento
+            })
+            .then(() => {
+                alert("Projeto salvo com sucesso!");
+            })
+            .catch(err => alert("Erro ao salvar: " + err));
+        });
+
+        // Carregar projetos do Firebase
+        const projetosRef = ref(db, "projetos/");
+        onValue(projetosRef, (snapshot) => {
+            const dados = snapshot.val();
+            
+            // Limpar linhas anteriores
+            tabela.innerHTML = `
+                <tr>
+                    <th>Nome</th>
+                    <th>Cliente</th>
+                    <th>Status</th>
+                    <th>Orçamento</th>
+                </tr>
+            `;
+
+            if (!dados) return;
+
+            // Criar linha para cada projeto
+            Object.values(dados).forEach(proj => {
+                const tr = document.createElement("tr");
+
+                tr.innerHTML = `
+                    <td>${proj.nome}</td>
+                    <td>${proj.cliente}</td>
+                    <td>${proj.status}</td>
+                    <td>${proj.orcamento}</td>
+                `;
+
+                tabela.appendChild(tr);
+            });
+        });
+
+    </script>
+
 </body>
 </html>

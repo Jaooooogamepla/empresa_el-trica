@@ -9,9 +9,12 @@
         .navbar a { color: white; margin: 0 15px; text-decoration: none; }
         .container { padding: 20px; }
         .faq { margin: 15px 0; }
+        button { padding: 10px 15px; border: none; background: #3498db; color: white; border-radius: 5px; cursor: pointer; }
+        button:hover { opacity: 0.9; }
     </style>
 </head>
 <body>
+
     <div class="navbar">
         <a href="dashboard.html">📊 Dashboard</a>
         <a href="ajuda.html">❓ Ajuda</a>
@@ -30,7 +33,46 @@
             <p>Acesse "Projetos" e clique em "Novo Projeto"</p>
         </div>
         
-        <button>📞 Contatar Suporte</button>
+        <button id="btnSuporte">📞 Contatar Suporte</button>
     </div>
+
+    <!-- ====================================== -->
+    <!--         FIREBASE - AJUDA / SUPORTE     -->
+    <!-- ====================================== -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCjdryEhdWNcWZpcIciZApYdZX5jXcST3A",
+            authDomain: "janoline-7285c.firebaseapp.com",
+            databaseURL: "https://janoline-7285c-default-rtdb.firebaseio.com",
+            projectId: "janoline-7285c",
+            storageBucket: "janoline-7285c.firebasestorage.app",
+            messagingSenderId: "688131267684",
+            appId: "1:688131267684:web:6a3d976a092512e1fad371",
+            measurementId: "G-K767JLC4BP"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        document.getElementById("btnSuporte").addEventListener("click", () => {
+
+            const id = Date.now();
+
+            const suporte = {
+                id,
+                origem: "Página de Ajuda",
+                mensagem: "Usuário solicitou suporte.",
+                dataHora: new Date().toISOString()
+            };
+
+            set(ref(db, "suporte/" + id), suporte)
+                .then(() => alert("📨 Sua solicitação foi enviada ao suporte!"))
+                .catch(err => alert("❌ Erro ao enviar: " + err));
+        });
+    </script>
+
 </body>
 </html>

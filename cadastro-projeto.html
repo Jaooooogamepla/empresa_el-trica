@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Novo Projeto - Janol.Inej</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #f8f9fa;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            padding: 0 20px;
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 15px 0;
+        }
+
+        .logo {
+            font-size: 1.8em;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .form-card {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .form-header h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .form-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .tab {
+            padding: 15px 25px;
+            background: #f8f9fa;
+            border: none;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            background: #3498db;
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .materiais-list {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+
+        .material-item {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .material-item input {
+            flex: 1;
+        }
+
+        .btn-group {
+            grid-column: 1 / -1;
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .form-message {
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+            display: none;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <div class="logo">🏗️ JANOL.INEJ</div>
+            <div class="nav-links">
+                <a href="dashboard.html">📊 Dashboard</a>
+                <a href="clientes.html">👥 Clientes</a>
+                <a href="projetos.html">🏗️ Projetos</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="form-card">
+            <div class="form-header">
+                <h1>🏗️ Novo Projeto Elétrico</h1>
+                <p>Cadastre todos os detalhes do projeto</p>
+            </div>
+
+            <div class="form-tabs">
+                <button class="tab active" onclick="openTab('dados-gerais')">📋 Dados Gerais</button>
+                <button class="tab" onclick="openTab('materiais')">📦 Materiais</button>
+                <button class="tab" onclick="openTab('equipe')">👥 Equipe</button>
+                <button class="tab" onclick="openTab('orcamento')">💰 Orçamento</button>
+            </div>
+
+            <form id="projetoForm">
+                <!-- ABA 1: Dados Gerais -->
+                <div id="dados-gerais" class="tab-content active">
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label>🏷️ Nome do Projeto</label>
+                            <input type="text" placeholder="Ex: Instalação Elétrica Predial" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>👥 Cliente</label>
+                            <select required>
+                                <option value="">Selecione o cliente...</option>
+                                <option value="1">João Silva Construtora</option>
+                                <option value="2">Empresa ABC Ltda</option>
+                                <option value="3">Maria Oliveira</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>📊 Tipo de Projeto</label>
+                            <select required>
+                                <option value="">Selecione...</option>
+                                <option value="instalacao">Instalação</option>
+                                <option value="manutencao">Manutenção</option>
+                                <option value="reforma">Reforma</option>
+                                <option value="projeto">Projeto</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>📅 Data Início</label>
+                            <input type="date" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>📅 Previsão Término</label>
+                            <input type="date" required>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label>📝 Descrição do Projeto</label>
+                            <textarea placeholder="Descreva detalhadamente o projeto..." rows="4" required></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ABA 2: Materiais -->
+                <div id="materiais" class="tab-content">
+                    <div class="form-group">
+                        <label>📦 Materiais Necessários</label>
+                        <div class="materiais-list" id="materiaisList">
+                            <div class="material-item">
+                                <select>
+                                    <option value="">Selecione material...</option>
+                                    <option value="fio-25">Fio 2,5mm</option>
+                                    <option value="fio-40">Fio 4,0mm</option>
+                                    <option value="disjuntor">Disjuntor</option>
+                                    <option value="lampada">Lâmpada LED</option>
+                                </select>
+                                <input type="number" placeholder="Quantidade" min="1">
+                                <button type="button" onclick="removerMaterial(this)" style="background: #e74c3c; color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer;">🗑️</button>
+                            </div>
+                        </div>
+                        <button type="button" onclick="adicionarMaterial()" style="background: #27ae60; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; margin-top: 10px;">➕ Adicionar Material</button>
+                    </div>
+                </div>
+
+                <!-- ABA 3: Equipe -->
+                <div id="equipe" class="tab-content">
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label>👷‍♂️ Engenheiro Responsável</label>
+                            <select>
+                                <option value="">Selecione...</option>
+                                <option value="1">Carlos Silva - CREA: 12345</option>
+                                <option value="2">Ana Santos - CREA: 67890</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label>🔧 Equipe de Eletricistas</label>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                                <label><input type="checkbox"> Maria Oliveira</label>
+                                <label><input type="checkbox"> João Santos</label>
+                                <label><input type="checkbox"> Pedro Costa</label>
+                                <label><input type="checkbox"> Ana Pereira</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ABA 4: Orçamento -->
+                <div id="orcamento" class="tab-content">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>💰 Valor do Projeto (R$)</label>
+                            <input type="number" step="0.01" placeholder="0.00" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>📊 Status</label>
+                            <select required>
+                                <option value="planejamento">Planejamento</option>
+                                <option value="andamento">Em Andamento</option>
+                                <option value="pausado">Pausado</option>
+                                <option value="concluido">Concluído</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label>💡 Observações Financeiras</label>
+                            <textarea placeholder="Observações sobre pagamentos, parcelas, etc..." rows="3"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <button type="button" class="btn btn-secondary" onclick="window.location.href='projetos.html'">
+                        ↩️ Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        💾 Salvar Projeto
+                    </button>
+                </div>
+            </form>
+
+            <div id="formMessage" class="form-message"></div>
+        </div>
+    </div>
+
+    <script>
+        // Sistema de abas
+        function openTab(tabName) {
+            // Esconder todas as abas
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remover active de todas as tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Mostrar aba selecionada
+            document.getElementById(tabName).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        // Sistema de materiais
+        function adicionarMaterial() {
+            const materiaisList = document.getElementById('materiaisList');
+            const novoMaterial = document.createElement('div');
+            novoMaterial.className = 'material-item';
+            novoMaterial.innerHTML = `
+                <select>
+                    <option value="">Selecione material...</option>
+                    <option value="fio-25">Fio 2,5mm</option>
+                    <option value="fio-40">Fio 4,0mm</option>
+                    <option value="disjuntor">Disjuntor</option>
+                    <option value="lampada">Lâmpada LED</option>
+                </select>
+                <input type="number" placeholder="Quantidade" min="1">
+                <button type="button" onclick="removerMaterial(this)" style="background: #e74c3c; color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer;">🗑️</button>
+            `;
+            materiaisList.appendChild(novoMaterial);
+        }
+
+        function removerMaterial(botao) {
+            botao.parentElement.remove();
+        }
+
+        // Envio do formulário
+        document.getElementById('projetoForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const messageDiv = document.getElementById('formMessage');
+            messageDiv.className = 'form-message success';
+            messageDiv.textContent = '✅ Projeto cadastrado com sucesso!';
+            messageDiv.style.display = 'block';
+            
+            // Simular salvamento
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+                window.location.href = 'projetos.html';
+            }, 2000);
+        });
+    </script>
+</body>
+</html>

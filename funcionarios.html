@@ -10,9 +10,11 @@
         .container { padding: 20px; }
         table { width: 100%; border-collapse: collapse; }
         th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        button { padding: 8px 15px; cursor: pointer; }
     </style>
 </head>
 <body>
+
     <div class="navbar">
         <a href="dashboard.html">📊 Dashboard</a>
         <a href="funcionarios.html">👷 Funcionários</a>
@@ -20,22 +22,99 @@
 
     <div class="container">
         <h1>👷 Funcionários</h1>
-        <button>➕ Novo Funcionário</button>
+        <button id="btnNovo">➕ Novo Funcionário</button>
         
-        <table>
+        <table id="tabelaFunc">
             <tr>
                 <th>Nome</th>
                 <th>Cargo</th>
                 <th>CREA</th>
                 <th>Status</th>
             </tr>
-            <tr>
-                <td>Maria Silva</td>
-                <td>Eletricista</td>
-                <td>12345-SP</td>
-                <td>Ativo</td>
-            </tr>
         </table>
     </div>
+
+    <!-- ======================================= -->
+    <!--   FIREBASE - FUNCIONÁRIOS CONECTADO     -->
+    <!-- ======================================= -->
+    <script type="module">
+
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCjdryEhdWNcWZpcIciZApYdZX5jXcST3A",
+            authDomain: "janoline-7285c.firebaseapp.com",
+            databaseURL: "https://janoline-7285c-default-rtdb.firebaseio.com",
+            projectId: "janoline-7285c",
+            storageBucket: "janoline-7285c.firebasestorage.app",
+            messagingSenderId: "688131267684",
+            appId: "1:688131267684:web:6a3d976a092512e1fad371",
+            measurementId: "G-K767JLC4BP"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        const tabela = document.getElementById("tabelaFunc");
+        const btnNovo = document.getElementById("btnNovo");
+
+        // CADASTRAR NOVO FUNCIONÁRIO
+        btnNovo.addEventListener("click", () => {
+            const nome = prompt("Nome do funcionário:");
+            const cargo = prompt("Cargo:");
+            const crea = prompt("CREA (ou N/A):");
+            const status = prompt("Status (Ativo / Inativo):");
+
+            if (!nome || !cargo || !crea || !status) {
+                alert("Preencha todos os campos!");
+                return;
+            }
+
+            const id = Date.now();
+
+            set(ref(db, "funcionarios/" + id), {
+                nome,
+                cargo,
+                crea,
+                status
+            })
+            .then(() => alert("Funcionário cadastrado com sucesso!"))
+            .catch(err => alert("Erro ao salvar: " + err));
+        });
+
+        // LISTAR FUNCIONÁRIOS DO FIREBASE
+        const funcRef = ref(db, "funcionarios/");
+
+        onValue(funcRef, (snapshot) => {
+            tabela.innerHTML = `
+                <tr>
+                    <th>Nome</th>
+                    <th>Cargo</th>
+                    <th>CREA</th>
+                    <th>Status</th>
+                </tr>
+            `;
+
+            if (!snapshot.exists()) return;
+
+            const dados = snapshot.val();
+
+            Object.values(dados).forEach(func => {
+                const tr = document.createElement("tr");
+
+                tr.innerHTML = `
+                    <td>${func.nome}</td>
+                    <td>${func.cargo}</td>
+                    <td>${func.crea}</td>
+                    <td>${func.status}</td>
+                `;
+
+                tabela.appendChild(tr);
+            });
+        });
+
+    </script>
+
 </body>
 </html>

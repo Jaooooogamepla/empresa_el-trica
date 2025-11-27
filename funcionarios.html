@@ -1,119 +1,293 @@
-<!-- funcionarios.html -->
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Funcionários - Janol.Inej</title>
+
     <style>
-        body { font-family: Arial; margin: 0; }
-        .navbar { background: #34495e; padding: 15px; }
-        .navbar a { color: white; margin: 0 15px; text-decoration: none; }
-        .container { padding: 20px; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
-        button { padding: 8px 15px; cursor: pointer; }
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', Tahoma, sans-serif; }
+        body { background:#f4f6f9; }
+
+        /* NAVBAR */
+        .navbar {
+            background:linear-gradient(135deg, #2c3e50, #34495e);
+            padding:15px 0;
+            box-shadow:0 5px 15px rgba(0,0,0,0.18);
+            position:sticky;
+            top:0;
+            z-index:100;
+        }
+        .nav-content {
+            max-width:1200px;
+            margin:auto;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            padding:0 25px;
+        }
+        .logo {
+            font-size:1.8em;
+            font-weight:bold;
+            color:white;
+            cursor:pointer;
+        }
+        .nav-links { display:flex; gap:30px; }
+        .nav-links a {
+            color:white;
+            text-decoration:none;
+            padding:8px 18px;
+            border-radius:10px;
+            transition:.3s;
+        }
+        .nav-links a:hover { background:rgba(255,255,255,0.18); transform:translateY(-2px); }
+        .active { background:rgba(255,255,255,0.25); }
+
+        /* PAGE */
+        .page-container {
+            max-width:1100px;
+            margin:35px auto;
+            padding:0 20px;
+        }
+
+        .page-header {
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:25px;
+        }
+
+        h1 { color:#2c3e50; font-size:1.9em; }
+
+        .btn-primary {
+            background:linear-gradient(135deg,#27ae60,#1e8449);
+            color:white;
+            padding:12px 20px;
+            border:none;
+            border-radius:10px;
+            cursor:pointer;
+            font-weight:600;
+            transition:.3s;
+        }
+        .btn-primary:hover { transform:translateY(-3px); box-shadow:0 6px 18px rgba(0,0,0,0.2); }
+
+        /* BUSCA */
+        .search-box {
+            background:#eef2f6;
+            padding:10px 15px;
+            border-radius:10px;
+            display:flex;
+            align-items:center;
+            gap:10px;
+            max-width:350px;
+            margin-bottom:20px;
+        }
+        .search-box input {
+            border:none;
+            outline:none;
+            background:transparent;
+            width:100%;
+        }
+
+        /* CARD FUNCIONÁRIO */
+        .card {
+            background:white;
+            border-radius:15px;
+            padding:20px;
+            margin-bottom:15px;
+            box-shadow:0 5px 20px rgba(0,0,0,0.08);
+            animation:fadeIn .4s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity:0; transform:translateY(10px); }
+            to { opacity:1; transform:translateY(0); }
+        }
+
+        .status-pill {
+            padding:6px 12px;
+            border-radius:999px;
+            font-size:12px;
+            font-weight:600;
+            display:inline-block;
+            margin-top:8px;
+        }
+        .ativo { background:#e8f8f5; color:#1e8449; }
+        .inativo { background:#f8d7da; color:#c0392b; }
+
+        .actions { margin-top:15px; display:flex; gap:10px; }
+        .btn-sm {
+            padding:8px 12px;
+            border:none;
+            border-radius:8px;
+            cursor:pointer;
+            font-size:13px;
+            font-weight:600;
+            transition:.3s;
+        }
+        .edit-btn { background:#3498db; color:white; }
+        .delete-btn { background:#e74c3c; color:white; }
+
+        .edit-btn:hover { background:#2c80b4; }
+        .delete-btn:hover { background:#c0392b; }
+
+        .empty {
+            text-align:center;
+            padding:20px;
+            color:#7f8c8d;
+        }
+
     </style>
 </head>
+
 <body>
 
-    <div class="navbar">
-        <a href="dashboard.html">📊 Dashboard</a>
-        <a href="funcionarios.html">👷 Funcionários</a>
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="nav-content">
+            <div class="logo" onclick="window.location.href='dashboard.html'">🏗️ JANOL.INEJ</div>
+            <div class="nav-links">
+                <a href="dashboard.html">📊 Dashboard</a>
+                <a href="clientes.html">👥 Clientes</a>
+                <a href="projetos.html">🏗️ Projetos</a>
+                <a href="equipamentos.html">🔧 Equipamentos</a>
+                <a class="active" href="funcionarios.html">👷 Funcionários</a>
+                <a href="configuracoes.html">⚙️ Configurações</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="page-container">
+
+        <div class="page-header">
+            <h1>👷 Funcionários</h1>
+            <button id="btnNovo" class="btn-primary">➕ Novo Funcionário</button>
+        </div>
+
+        <div class="search-box">
+            <span>🔍</span>
+            <input type="text" id="busca" placeholder="Buscar funcionário...">
+        </div>
+
+        <div id="listaFuncionarios"></div>
+        <div id="emptyMsg" class="empty" style="display:none;">Nenhum funcionário cadastrado.</div>
+
     </div>
 
-    <div class="container">
-        <h1>👷 Funcionários</h1>
-        <button id="btnNovo">➕ Novo Funcionário</button>
-        
-        <table id="tabelaFunc">
-            <tr>
-                <th>Nome</th>
-                <th>Cargo</th>
-                <th>CREA</th>
-                <th>Status</th>
-            </tr>
-        </table>
-    </div>
-
-    <!-- ======================================= -->
-    <!--   FIREBASE - FUNCIONÁRIOS CONECTADO     -->
-    <!-- ======================================= -->
+    <!-- FIREBASE -->
     <script type="module">
-
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getDatabase, ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         const firebaseConfig = {
-            apiKey: "AIzaSyCjdryEhdWNcWZpcIciZApYdZX5jXcST3A",
-            authDomain: "janoline-7285c.firebaseapp.com",
-            databaseURL: "https://janoline-7285c-default-rtdb.firebaseio.com",
-            projectId: "janoline-7285c",
-            storageBucket: "janoline-7285c.firebasestorage.app",
-            messagingSenderId: "688131267684",
-            appId: "1:688131267684:web:6a3d976a092512e1fad371",
-            measurementId: "G-K767JLC4BP"
+            apiKey:"AIzaSyCjdryEhdWNcWZpcIciZApYdZX5jXcST3A",
+            authDomain:"janoline-7285c.firebaseapp.com",
+            databaseURL:"https://janoline-7285c-default-rtdb.firebaseio.com",
+            projectId:"janoline-7285c",
+            storageBucket:"janoline-7285c.firebasestorage.app",
+            messagingSenderId:"688131267684",
+            appId:"1:688131267684:web:6a3d976a092512e1fad371",
+            measurementId:"G-K767JLC4BP"
         };
 
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        const tabela = document.getElementById("tabelaFunc");
+        const lista = document.getElementById("listaFuncionarios");
+        const emptyMsg = document.getElementById("emptyMsg");
         const btnNovo = document.getElementById("btnNovo");
+        const busca = document.getElementById("busca");
 
-        // CADASTRAR NOVO FUNCIONÁRIO
+        let cache = [];
+
+        // Criar novo funcionário
         btnNovo.addEventListener("click", () => {
             const nome = prompt("Nome do funcionário:");
             const cargo = prompt("Cargo:");
             const crea = prompt("CREA (ou N/A):");
             const status = prompt("Status (Ativo / Inativo):");
 
-            if (!nome || !cargo || !crea || !status) {
-                alert("Preencha todos os campos!");
-                return;
-            }
+            if (!nome || !cargo || !crea || !status) return alert("Preencha todos os campos!");
 
             const id = Date.now();
 
-            set(ref(db, "funcionarios/" + id), {
-                nome,
-                cargo,
-                crea,
-                status
-            })
-            .then(() => alert("Funcionário cadastrado com sucesso!"))
-            .catch(err => alert("Erro ao salvar: " + err));
+            set(ref(db, "funcionarios/" + id), { id, nome, cargo, crea, status })
+                .then(() => alert("Funcionário cadastrado!"));
         });
 
-        // LISTAR FUNCIONÁRIOS DO FIREBASE
-        const funcRef = ref(db, "funcionarios/");
+        // Carregar lista
+        onValue(ref(db, "funcionarios"), snapshot => {
+            lista.innerHTML = "";
+            cache = [];
 
-        onValue(funcRef, (snapshot) => {
-            tabela.innerHTML = `
-                <tr>
-                    <th>Nome</th>
-                    <th>Cargo</th>
-                    <th>CREA</th>
-                    <th>Status</th>
-                </tr>
-            `;
+            if (!snapshot.exists()) {
+                emptyMsg.style.display = "block";
+                return;
+            }
 
-            if (!snapshot.exists()) return;
+            snapshot.forEach(child => cache.push(child.val()));
 
-            const dados = snapshot.val();
+            emptyMsg.style.display = "none";
+            render(cache);
+        });
 
-            Object.values(dados).forEach(func => {
-                const tr = document.createElement("tr");
+        // Renderizar cards
+        function render(listaFunc) {
+            lista.innerHTML = "";
 
-                tr.innerHTML = `
-                    <td>${func.nome}</td>
-                    <td>${func.cargo}</td>
-                    <td>${func.crea}</td>
-                    <td>${func.status}</td>
+            listaFunc.forEach(f => {
+
+                const card = document.createElement("div");
+                card.className = "card";
+
+                const statusClass = f.status.toLowerCase() === "ativo" ? "ativo" : "inativo";
+
+                card.innerHTML = `
+                    <h3>${f.nome}</h3>
+                    <p><strong>Cargo:</strong> ${f.cargo}</p>
+                    <p><strong>CREA:</strong> ${f.crea}</p>
+                    <span class="status-pill ${statusClass}">${f.status}</span>
+
+                    <div class="actions">
+                        <button class="btn-sm edit-btn" onclick="editar(${f.id})">✏️ Editar</button>
+                        <button class="btn-sm delete-btn" onclick="excluir(${f.id})">🗑️ Excluir</button>
+                    </div>
                 `;
 
-                tabela.appendChild(tr);
+                lista.appendChild(card);
             });
+        }
+
+        // Busca dinâmica
+        busca.addEventListener("input", () => {
+            const termo = busca.value.toLowerCase();
+            const filtrados = cache.filter(f =>
+                f.nome.toLowerCase().includes(termo) ||
+                f.cargo.toLowerCase().includes(termo)
+            );
+            render(filtrados);
         });
 
+        // Globais
+        window.excluir = id => {
+            if (confirm("Excluir funcionário?")) {
+                remove(ref(db, "funcionarios/" + id));
+            }
+        };
+
+        window.editar = id => {
+            const f = cache.find(x => x.id == id);
+            if (!f) return alert("Funcionário não encontrado!");
+
+            const nome = prompt("Nome:", f.nome);
+            const cargo = prompt("Cargo:", f.cargo);
+            const crea = prompt("CREA:", f.crea);
+            const status = prompt("Status (Ativo / Inativo):", f.status);
+
+            if (!nome || !cargo || !crea || !status) return alert("Campos inválidos!");
+
+            set(ref(db, "funcionarios/" + id), { id, nome, cargo, crea, status });
+        };
     </script>
 
 </body>

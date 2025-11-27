@@ -1,0 +1,201 @@
+<!-- projeto.html -->
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Novo Projeto - Janol.Inej</title>
+
+    <style>
+        body { font-family: Arial; margin: 0; background: #f4f6f9; }
+        .navbar { background: #34495e; padding: 15px; color: white; }
+        .navbar a { color: white; margin-right: 20px; text-decoration: none; }
+        .container { max-width: 900px; margin: 30px auto; background: white; padding: 25px; border-radius: 10px; }
+        h1 { color: #2c3e50; margin-bottom: 20px; }
+        label { font-weight: bold; margin-top: 15px; display: block; }
+        input, select, textarea {
+            width: 100%; padding: 12px; border-radius: 8px;
+            border: 1px solid #ccc; margin-top: 5px;
+        }
+        button {
+            padding: 12px 20px; border: none; border-radius: 8px;
+            cursor: pointer; margin-top: 20px; font-weight: bold;
+        }
+        .btn-primary { background: #27ae60; color: white; }
+        .btn-secondary { background: #7f8c8d; color: white; }
+        .btn-delete { background: #e74c3c; color:white; margin-top: 15px; display:none; }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <a href="dashboard.html">📊 Dashboard</a>
+        <a href="projetos.html">🏗️ Projetos</a>
+        <a href="clientes.html">👥 Clientes</a>
+        <a href="materiais.html">📦 Materiais</a>
+        <a href="equipamentos.html">⚙️ Equipamentos</a>
+    </div>
+
+    <div class="container">
+        <h1 id="tituloPagina">➕ Novo Projeto</h1>
+
+        <form id="formProjeto">
+
+            <label>Nome do Projeto</label>
+            <input id="nomeProjeto" required>
+
+            <label>Cliente</label>
+            <select id="cliente" required>
+                <option value="">Carregando...</option>
+            </select>
+
+            <label>Materiais Necessários</label>
+            <select id="material">
+                <option value="">Carregando materiais...</option>
+            </select>
+
+            <label>Equipamento Utilizado</label>
+            <select id="equipamento">
+                <option value="">Carregando equipamentos...</option>
+            </select>
+
+            <label>Valor do Projeto (R$)</label>
+            <input type="number" id="valor" required min="0" step="0.01">
+
+            <label>Status</label>
+            <select id="status">
+                <option value="Planejamento">Planejamento</option>
+                <option value="Em andamento">Em andamento</option>
+                <option value="Concluído">Concluído</option>
+            </select>
+
+            <label>Descrição</label>
+            <textarea id="descricao" rows="4"></textarea>
+
+            <button class="btn-primary" type="submit">💾 Salvar Projeto</button>
+            <button class="btn-delete" id="btnExcluir">🗑️ Excluir Projeto</button>
+        </form>
+    </div>
+
+    <script type="module">
+
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, get, set, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        const config = {
+            apiKey: "AIzaSyCjdryEhdWNcWZpcIciZApYdZX5jXcST3A",
+            authDomain: "janoline-7285c.firebaseapp.com",
+            databaseURL: "https://janoline-7285c-default-rtdb.firebaseio.com",
+            projectId: "janoline-7285c",
+            storageBucket: "janoline-7285c.firebasestorage.app",
+            messagingSenderId: "688131267684",
+            appId: "1:688131267684:web:6a3d976a092512e1fad371"
+        };
+
+        const app = initializeApp(config);
+        const db = getDatabase(app);
+
+        const nomeProjeto = document.getElementById("nomeProjeto");
+        const cliente = document.getElementById("cliente");
+        const material = document.getElementById("material");
+        const equipamento = document.getElementById("equipamento");
+        const valor = document.getElementById("valor");
+        const descricao = document.getElementById("descricao");
+        const status = document.getElementById("status");
+        const form = document.getElementById("formProjeto");
+        const btnExcluir = document.getElementById("btnExcluir");
+        const titulo = document.getElementById("tituloPagina");
+
+        const params = new URLSearchParams(window.location.search);
+        const projetoId = params.get("id");
+
+        // 🔹 CARREGAR CLIENTES
+        async function carregarClientes() {
+            cliente.innerHTML = "<option value=''>Selecione...</option>";
+            const snap = await get(ref(db, "clientes"));
+            if (snap.exists()) {
+                snap.forEach(c => {
+                    cliente.innerHTML += `<option value="${c.key}">${c.val().nome}</option>`;
+                });
+            }
+        }
+
+        // 🔹 CARREGAR MATERIAIS
+        async function carregarMateriais() {
+            material.innerHTML = "<option value=''>Selecione...</option>";
+            const snap = await get(ref(db, "materiais"));
+            if (snap.exists()) {
+                snap.forEach(m => {
+                    material.innerHTML += `<option value="${m.key}">${m.val().nome}</option>`;
+                });
+            }
+        }
+
+        // 🔹 CARREGAR EQUIPAMENTOS
+        async function carregarEquipamentos() {
+            equipamento.innerHTML = "<option value=''>Selecione...</option>";
+            const snap = await get(ref(db, "equipamentos"));
+            if (snap.exists()) {
+                snap.forEach(e => {
+                    equipamento.innerHTML += `<option value="${e.key}">${e.val().nome}</option>`;
+                });
+            }
+        }
+
+        // Carregar tudo
+        carregarClientes();
+        carregarMateriais();
+        carregarEquipamentos();
+
+        // 🔹 MODO EDIÇÃO
+        if (projetoId) {
+            titulo.textContent = "✏️ Editar Projeto";
+            btnExcluir.style.display = "block";
+
+            get(ref(db, "projetos/" + projetoId)).then(snap => {
+                if (!snap.exists()) return;
+
+                const p = snap.val();
+
+                nomeProjeto.value = p.nome;
+                cliente.value = p.clienteId;
+                material.value = p.materialId;
+                equipamento.value = p.equipId;
+                valor.value = p.valor;
+                status.value = p.status;
+                descricao.value = p.descricao;
+            });
+        }
+
+        // 🔹 SALVAR
+        form.addEventListener("submit", async e => {
+            e.preventDefault();
+
+            const id = projetoId || Date.now();
+
+            await set(ref(db, "projetos/" + id), {
+                id,
+                nome: nomeProjeto.value,
+                clienteId: cliente.value,
+                materialId: material.value,
+                equipId: equipamento.value,
+                valor: parseFloat(valor.value),
+                status: status.value,
+            });
+
+            alert("Projeto salvo!");
+            window.location.href = "projetos.html";
+        });
+
+        // 🔹 EXCLUIR
+        btnExcluir.addEventListener("click", async () => {
+            if (!confirm("Excluir projeto?")) return;
+
+            await remove(ref(db, "projetos/" + projetoId));
+            alert("Projeto removido!");
+            window.location.href = "projetos.html";
+        });
+
+    </script>
+</body>
+</html>

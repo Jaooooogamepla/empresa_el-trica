@@ -1,49 +1,232 @@
 <!-- projetos.html -->
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Projetos - Janol.Inej</title>
+
     <style>
-        body { font-family: Arial; margin: 0; }
-        .navbar { background: #34495e; padding: 15px; }
-        .navbar a { color: white; margin: 0 15px; text-decoration: none; }
-        .container { padding: 20px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
-        th { background: #f2f2f2; }
-        button { padding: 8px 15px; cursor: pointer; }
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', Tahoma, sans-serif; }
+
+        body { background:#f4f6f9; }
+
+        /* NAVBAR */
+        .navbar {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            padding: 15px 0;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            position:sticky;
+            top:0;
+            z-index:10;
+        }
+        .nav-content {
+            max-width: 1200px;
+            margin:auto;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            padding:0 25px;
+        }
+        .logo {
+            font-size:1.8em;
+            font-weight:bold;
+            color:white;
+            cursor:pointer;
+        }
+        .nav-links {
+            display:flex;
+            gap:25px;
+        }
+        .nav-links a {
+            color:white;
+            text-decoration:none;
+            padding:8px 18px;
+            border-radius:8px;
+            transition:.3s;
+        }
+        .nav-links a:hover {
+            background:rgba(255,255,255,0.15);
+        }
+        .nav-links .active {
+            background:rgba(255,255,255,0.22);
+        }
+
+        /* CONTEÚDO */
+        .container {
+            max-width:1100px;
+            margin:35px auto;
+            padding:0 20px;
+        }
+
+        .header {
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:20px;
+        }
+
+        .header h1 {
+            color:#2c3e50;
+        }
+
+        .btn-primary {
+            background:linear-gradient(135deg, #27ae60, #1e8449);
+            color:white;
+            padding:12px 20px;
+            border:none;
+            border-radius:10px;
+            cursor:pointer;
+            font-weight:bold;
+            transition:.3s;
+        }
+        .btn-primary:hover {
+            transform:translateY(-2px);
+            box-shadow:0 6px 18px rgba(0,0,0,0.18);
+        }
+
+        /* CARD */
+        .card {
+            background:white;
+            border-radius:15px;
+            padding:25px;
+            box-shadow:0 10px 30px rgba(0,0,0,0.08);
+            animation:fadeIn .5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity:0; transform:translateY(10px); }
+            to   { opacity:1; transform:translateY(0); }
+        }
+
+        .toolbar {
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:15px;
+        }
+
+        .search-box {
+            background:#f0f3f7;
+            padding:8px 12px;
+            border-radius:10px;
+            display:flex;
+            align-items:center;
+            gap:8px;
+            max-width:350px;
+            width:100%;
+        }
+        .search-box input {
+            border:none;
+            background:transparent;
+            width:100%;
+            outline:none;
+        }
+
+        .badge {
+            background:#ecf5ff;
+            padding:6px 15px;
+            border-radius:999px;
+            font-weight:600;
+            color:#2c3e50;
+        }
+
+        /* TABELA */
+        table { width:100%; border-collapse:collapse; margin-top:10px; }
+        thead { background:#f7f9fc; }
+        th, td { padding:14px; font-size:14px; text-align:left; }
+        tbody tr { border-bottom:1px solid #ecf0f1; transition:.2s; }
+        tbody tr:hover { background:#f9fbff; }
+
+        .actions button {
+            padding:6px 10px;
+            border:none;
+            border-radius:8px;
+            cursor:pointer;
+            font-size:12px;
+            margin-right:6px;
+            transition:.2s;
+            color:white;
+        }
+
+        .btn-edit { background:#3498db; }
+        .btn-edit:hover { background:#2c80b4; }
+
+        .btn-del { background:#e74c3c; }
+        .btn-del:hover { background:#c0392b; }
+
+        .empty {
+            text-align:center;
+            padding:20px;
+            color:#7f8c8d;
+        }
     </style>
 </head>
 <body>
-    <div class="navbar">
-        <a href="dashboard.html">📊 Dashboard</a>
-        <a href="clientes.html">👥 Clientes</a>
-        <a href="projetos.html">🏗️ Projetos</a>
-    </div>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="nav-content">
+            <div class="logo" onclick="window.location.href='dashboard.html'">🏗️ JANOL.INEJ</div>
+            <div class="nav-links">
+                <a href="dashboard.html">📊 Dashboard</a>
+                <a href="clientes.html">👥 Clientes</a>
+                <a href="projetos.html" class="active">🏗️ Projetos</a>
+                <a href="equipamentos.html">🔧 Equipamentos</a>
+                <a href="funcionarios.html">👷 Funcionários</a>
+                <a href="configuracoes.html">⚙️ Configurações</a>
+            </div>
+        </div>
+    </nav>
 
     <div class="container">
-        <h1>🏗️ Projetos</h1>
-        <button id="novoProjeto">➕ Novo Projeto</button>
-        
-        <table id="tabelaProjetos">
-            <tr>
-                <th>Nome</th>
-                <th>Cliente</th>
-                <th>Status</th>
-                <th>Orçamento</th>
-            </tr>
 
-            <!-- Linha exemplo removida, agora carregado do Firebase -->
-        </table>
+        <div class="header">
+            <h1>🏗️ Projetos Cadastrados</h1>
+
+            <!-- CORREÇÃO AQUI -->
+            <button class="btn-primary" onclick="window.location.href='projeto.html'">
+                ➕ Novo Projeto
+            </button>
+        </div>
+
+        <div class="card">
+
+            <div class="toolbar">
+                <div class="search-box">
+                    🔍
+                    <input type="text" id="busca" placeholder="Buscar por nome, cliente ou status...">
+                </div>
+
+                <div class="badge" id="contador">0 projetos</div>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Projeto</th>
+                        <th>Cliente</th>
+                        <th>Status</th>
+                        <th>Orçamento (R$)</th>
+                        <th style="text-align:right;">Ações</th>
+                    </tr>
+                </thead>
+
+                <tbody id="tbodyProjetos"></tbody>
+            </table>
+
+            <div id="emptyState" class="empty" style="display:none;">
+                😕 Nenhum projeto encontrado.
+            </div>
+
+        </div>
     </div>
 
-    <!-- ================================= -->
-    <!--   FIREBASE - PROJETOS LIGADOS     -->
-    <!-- ================================= -->
+    <!-- FIREBASE + LISTAGEM -->
     <script type="module">
 
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getDatabase, ref, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCjdryEhdWNcWZpcIciZApYdZX5jXcST3A",
@@ -57,68 +240,93 @@
         };
 
         const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
+        const db  = getDatabase(app);
 
-        const btnNovoProjeto = document.getElementById("novoProjeto");
-        const tabela = document.getElementById("tabelaProjetos");
+        const tbody  = document.getElementById("tbodyProjetos");
+        const busca  = document.getElementById("busca");
+        const empty  = document.getElementById("emptyState");
+        const count  = document.getElementById("contador");
 
-        // Criar novo projeto no Firebase
-        btnNovoProjeto.addEventListener("click", () => {
-            const nome = prompt("Nome do Projeto:");
-            const cliente = prompt("Nome do Cliente:");
-            const status = prompt("Status do Projeto:");
-            const orcamento = prompt("Orçamento (ex: R$ 10.000):");
+        let projetosCache = [];
 
-            if (!nome || !cliente || !status || !orcamento) {
-                alert("Preencha todos os campos!");
+        // Carregar projetos
+        const refProjetos = ref(db, "projetos");
+
+        onValue(refProjetos, snap => {
+            projetosCache = [];
+
+            tbody.innerHTML = "";
+
+            if (!snap.exists()) {
+                empty.style.display = "block";
+                count.textContent = "0 projetos";
                 return;
             }
 
-            const id = Date.now();
+            snap.forEach(child => {
+                const p = child.val();
+                projetosCache.push(p);
+            });
 
-            set(ref(db, "projetos/" + id), {
-                nome,
-                cliente,
-                status,
-                orcamento
-            })
-            .then(() => {
-                alert("Projeto salvo com sucesso!");
-            })
-            .catch(err => alert("Erro ao salvar: " + err));
+            renderTabela(projetosCache);
         });
 
-        // Carregar projetos do Firebase
-        const projetosRef = ref(db, "projetos/");
-        onValue(projetosRef, (snapshot) => {
-            const dados = snapshot.val();
-            
-            // Limpar linhas anteriores
-            tabela.innerHTML = `
-                <tr>
-                    <th>Nome</th>
-                    <th>Cliente</th>
-                    <th>Status</th>
-                    <th>Orçamento</th>
-                </tr>
-            `;
+        function renderTabela(lista) {
 
-            if (!dados) return;
+            tbody.innerHTML = "";
 
-            // Criar linha para cada projeto
-            Object.values(dados).forEach(proj => {
+            if (lista.length === 0) {
+                empty.style.display = "block";
+                count.textContent = "0 projetos";
+                return;
+            } else {
+                empty.style.display = "none";
+            }
+
+            lista.forEach(p => {
                 const tr = document.createElement("tr");
 
                 tr.innerHTML = `
-                    <td>${proj.nome}</td>
-                    <td>${proj.cliente}</td>
-                    <td>${proj.status}</td>
-                    <td>${proj.orcamento}</td>
+                    <td>${p.nome}</td>
+                    <td>${p.clienteNome || "-"}</td>
+                    <td>${p.status}</td>
+                    <td>${p.valor || "0,00"}</td>
+
+                    <td style="text-align:right;">
+                        <button class="btn-edit" onclick="editar('${p.id}')">✏️</button>
+                        <button class="btn-del" onclick="excluir('${p.id}')">🗑️</button>
+                    </td>
                 `;
 
-                tabela.appendChild(tr);
+                tbody.appendChild(tr);
             });
+
+            count.textContent = `${lista.length} projeto${lista.length > 1 ? "s" : ""}`;
+        }
+
+        // Pesquisar
+        busca.addEventListener("input", () => {
+            const termo = busca.value.toLowerCase();
+
+            const filtrados = projetosCache.filter(p => 
+                (p.nome || "").toLowerCase().includes(termo) ||
+                (p.clienteNome || "").toLowerCase().includes(termo) ||
+                (p.status || "").toLowerCase().includes(termo)
+            );
+
+            renderTabela(filtrados);
         });
+
+        // Editar (CORRIGIDO)
+        window.editar = (id) => {
+            window.location.href = `projeto.html?id=${id}`;
+        }
+
+        // Excluir
+        window.excluir = (id) => {
+            if (!confirm("Tem certeza que deseja excluir este projeto?")) return;
+            remove(ref(db, "projetos/" + id));
+        }
 
     </script>
 

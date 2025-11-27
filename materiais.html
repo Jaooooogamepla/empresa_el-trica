@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Materiais - Janol.Inej</title>
+
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Tahoma,sans-serif;}
+
+        body{background:#f4f6f9;}
+
+        /* NAVBAR */
+        .navbar{
+            background:linear-gradient(135deg,#2c3e50,#34495e);
+            padding:15px 0;
+            box-shadow:0 4px 10px rgba(0,0,0,0.15);
+            position:sticky;
+            top:0;
+            z-index:10;
+        }
+        .nav-content{
+            max-width:1200px;
+            margin:auto;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            padding:0 25px;
+        }
+        .logo{
+            font-size:1.8em;
+            font-weight:bold;
+            color:white;
+            cursor:pointer;
+        }
+        .nav-links{
+            display:flex;
+            gap:25px;
+        }
+        .nav-links a{
+            color:white;
+            text-decoration:none;
+            padding:8px 18px;
+            border-radius:8px;
+            transition:.3s;
+        }
+        .nav-links a:hover{
+            background:rgba(255,255,255,0.15);
+        }
+        .nav-links .active{
+            background:rgba(255,255,255,0.22);
+        }
+
+        /* CONTAINER */
+        .container{
+            max-width:1100px;
+            margin:35px auto;
+            padding:0 20px;
+        }
+
+        .header{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:20px;
+        }
+        .header h1{color:#2c3e50;}
+
+        .btn-primary{
+            background:linear-gradient(135deg,#27ae60,#1e8449);
+            color:white;
+            padding:12px 20px;
+            border:none;
+            border-radius:10px;
+            cursor:pointer;
+            font-weight:bold;
+            transition:.3s;
+        }
+        .btn-primary:hover{
+            transform:translateY(-2px);
+            box-shadow:0 6px 18px rgba(0,0,0,0.18);
+        }
+
+        .card{
+            background:white;
+            padding:25px;
+            border-radius:15px;
+            box-shadow:0 10px 30px rgba(0,0,0,0.08);
+            animation:fadeIn .5s ease-out;
+        }
+
+        @keyframes fadeIn{
+            from{opacity:0;transform:translateY(10px);}
+            to{opacity:1;transform:translateY(0);}
+        }
+
+        table{
+            width:100%;
+            border-collapse:collapse;
+            margin-top:15px;
+        }
+        th,td{
+            padding:14px;
+            border-bottom:1px solid #eee;
+            font-size:15px;
+        }
+        th{
+            background:#f4f4f4;
+            text-align:left;
+        }
+        .actions button{
+            padding:6px 10px;
+            color:white;
+            border:none;
+            border-radius:6px;
+            cursor:pointer;
+            margin-right:5px;
+        }
+        .btn-edit{background:#3498db;}
+        .btn-del{background:#e74c3c;}
+
+        .search-box{
+            background:#eef2f7;
+            padding:10px 15px;
+            border-radius:12px;
+            display:flex;
+            align-items:center;
+            gap:8px;
+            width:300px;
+        }
+        .search-box input{
+            border:none;
+            background:transparent;
+            width:100%;
+            outline:none;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-content">
+            <div class="logo" onclick="window.location.href='dashboard.html'">🏗️ JANOL.INEJ</div>
+
+            <div class="nav-links">
+                <a href="dashboard.html">📊 Dashboard</a>
+                <a href="clientes.html">👥 Clientes</a>
+                <a href="projetos.html">🏗️ Projetos</a>
+                <a href="materiais.html" class="active">📦 Materiais</a>
+                <a href="equipamentos.html">🔧 Equipamentos</a>
+                <a href="funcionarios.html">👷 Funcionários</a>
+                <a href="configuracoes.html">⚙️ Configurações</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+
+        <div class="header">
+            <h1>📦 Materiais</h1>
+            <button class="btn-primary" onclick="novoMaterial()">➕ Novo Material</button>
+        </div>
+
+        <div class="card">
+            <div class="search-box">
+                🔍 <input type="text" id="busca" placeholder="Buscar material...">
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Material</th>
+                        <th>Categoria</th>
+                        <th>Preço (R$)</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="tbodyMateriais"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCjdryEhdWNcWZpcIciZApYdZX5jXcST3A",
+            authDomain: "janoline-7285c.firebaseapp.com",
+            databaseURL: "https://janoline-7285c-default-rtdb.firebaseio.com",
+            projectId: "janoline-7285c",
+            storageBucket: "janoline-7285c.firebasestorage.app",
+            messagingSenderId: "688131267684",
+            appId: "1:688131267684:web:6a3d976a092512e1fad371",
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        const tbody = document.getElementById("tbodyMateriais");
+        const busca = document.getElementById("busca");
+
+        let cache = [];
+
+        // LISTAR MATERIAIS
+        onValue(ref(db, "materiais"), snap => {
+            cache = [];
+            tbody.innerHTML = "";
+
+            if (!snap.exists()) return;
+
+            snap.forEach(child => {
+                const item = child.val();
+                item.id = child.key;
+                cache.push(item);
+            });
+
+            render(cache);
+        });
+
+        function render(lista){
+            tbody.innerHTML = "";
+            lista.forEach(m => {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td>${m.nome}</td>
+                    <td>${m.categoria}</td>
+                    <td>R$ ${Number(m.preco).toFixed(2)}</td>
+                    <td>
+                        <button class="btn-edit" onclick="editar('${m.id}')">✏️</button>
+                        <button class="btn-del" onclick="excluir('${m.id}')">🗑️</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // BUSCA
+        busca.addEventListener("input", () => {
+            const termo = busca.value.toLowerCase();
+            const filtrados = cache.filter(m =>
+                m.nome.toLowerCase().includes(termo)
+            );
+            render(filtrados);
+        });
+
+        // NOVO MATERIAL
+        window.novoMaterial = () => {
+            const nome = prompt("Nome do material:");
+            const categoria = prompt("Categoria:");
+            const preco = prompt("Preço:");
+
+            if (!nome || !categoria || !preco) return alert("Preencha tudo!");
+
+            const id = Date.now();
+
+            set(ref(db, "materiais/" + id), {
+                nome, categoria, preco
+            });
+        };
+
+        // EDITAR
+        window.editar = id => {
+            window.location.href = `materiais-editar.html?id=${id}`;
+        };
+
+        // EXCLUIR
+        window.excluir = id => {
+            if (!confirm("Excluir material?")) return;
+            remove(ref(db, "materiais/" + id));
+        };
+    </script>
+
+</body>
+</html>

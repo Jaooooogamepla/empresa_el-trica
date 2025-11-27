@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar Cliente - Janol.Inej</title>
+
+    <style>
+        * {
+            margin: 0; padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+        }
+        body { background: #f4f6f9; }
+
+        /* NAVBAR */
+        .navbar {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            padding: 15px 0;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            animation: fadeInDown .5s ease-out;
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 25px;
+        }
+
+        .logo {
+            font-size: 1.8em;
+            font-weight: bold;
+            cursor: pointer;
+            color: white;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            transition: .3s;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255,255,255,0.15);
+            transform: translateY(-2px);
+        }
+
+        /* CARD */
+        .container { max-width: 850px; margin: 40px auto; padding: 0 20px; }
+        .form-card {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            animation: fadeIn .5s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity:0; transform:translateY(10px); }
+            to { opacity:1; transform:translateY(0); }
+        }
+
+        .form-header { text-align: center; margin-bottom: 25px; }
+        .form-header h1 { color: #2c3e50; margin-bottom: 10px; }
+
+        /* GRID */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .form-group.full-width { grid-column: 1 / -1; }
+
+        label { margin-bottom: 8px; font-weight: 600; display: block; }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            transition: .3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: #3498db;
+            box-shadow: 0 0 5px rgba(52,152,219,0.5);
+        }
+
+        /* BOTÕES */
+        .btn-group { grid-column: 1/-1; display: flex; gap: 15px; }
+
+        .btn {
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: .3s;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #27ae60, #1e8449);
+            color: white;
+        }
+        .btn-secondary {
+            background: #7f8c8d;
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+
+        /* MENSAGENS */
+        .form-message {
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+            display: none;
+        }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+
+        /* BOTÃO EXCLUIR */
+        .btn-delete {
+            width: 100%;
+            margin-top: 15px;
+            padding: 15px;
+            background: #e74c3c;
+            color: white;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: .3s;
+            display: none;
+        }
+        .btn-delete:hover { background: #c0392b; }
+
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="nav-content">
+            <div class="logo" onclick="location.href='dashboard.html'">🏗️ JANOL.INEJ</div>
+
+            <div class="nav-links">
+                <a href="dashboard.html">📊 Dashboard</a>
+                <a href="clientes.html">👥 Clientes</a>
+                <a href="projetos.html">🏗 Projetos</a>
+                <a href="funcionarios.html">👷 Funcionários</a>
+                <a href="configuracoes.html">⚙ Configurações</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="form-card">
+
+            <div class="form-header">
+                <h1>👥 Cadastrar Cliente</h1>
+                <p>Preencha todas as informações abaixo</p>
+            </div>
+
+            <form id="clienteForm">
+                <div class="form-grid">
+
+                    <div class="form-group">
+                        <label>📛 Nome Completo / Razão Social</label>
+                        <input id="nome" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>🔢 CPF / CNPJ</label>
+                        <input id="documento" required maxlength="18">
+                    </div>
+
+                    <div class="form-group">
+                        <label>📞 Telefone</label>
+                        <input id="telefone" required maxlength="15">
+                    </div>
+
+                    <div class="form-group">
+                        <label>📧 Email</label>
+                        <input id="email" type="email" required>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>🏠 Endereço</label>
+                        <input id="endereco" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>🏙 Cidade</label>
+                        <input id="cidade" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>🎌 Estado</label>
+                        <select id="estado" required>
+                            <option value="">Selecione</option>
+                            <option>SP</option><option>RJ</option><option>MG</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>💬 Observações</label>
+                        <textarea id="obs" rows="3"></textarea>
+                    </div>
+
+                </div>
+
+                <div class="btn-group">
+                    <button type="button" class="btn btn-secondary" onclick="location.href='clientes.html'">↩ Cancelar</button>
+                    <button class="btn btn-primary" id="btnSalvar">💾 Salvar</button>
+                </div>
+            </form>
+
+            <div id="formMessage" class="form-message"></div>
+
+            <button id="btnExcluir" class="btn-delete">🗑 Excluir Cliente</button>
+        </div>
+    </div>
+
+    <!-- FIREBASE + CRUD + MÁSCARAS -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, set, get, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCjdryEhdWNcWZpcIciZApYdZX5jXcST3A",
+            authDomain: "janoline-7285c.firebaseapp.com",
+            databaseURL: "https://janoline-7285c-default-rtdb.firebaseio.com",
+            projectId: "janoline-7285c",
+            storageBucket: "janoline-7285c.appspot.com",
+            messagingSenderId: "688131267684",
+            appId: "1:688131267684:web:6a3d976a092512e1fad371"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        /* MÁSCARA CPF/CNPJ */
+        documento.addEventListener("input", e => {
+            let v = e.target.value.replace(/\D/g, "");
+            if (v.length <= 11) {
+                v = v.replace(/(\d{3})(\d)/, "$1.$2")
+                    .replace(/(\d{3})(\d)/, "$1.$2")
+                    .replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+            } else {
+                v = v.replace(/(\d{2})(\d)/, "$1.$2")
+                    .replace(/(\d{3})(\d)/, "$1.$2")
+                    .replace(/(\d{3})(\d)/, "$1/$2")
+                    .replace(/(\d{4})(\d{1,2})$/, "$1-$2");
+            }
+            e.target.value = v;
+        });
+
+        /* MÁSCARA TELEFONE */
+        telefone.addEventListener("input", e => {
+            let v = e.target.value.replace(/\D/g, "");
+            v = v.replace(/^(\d{2})(\d)/g, "($1) $2");
+            v = v.replace(/(\d{5})(\d{4})$/, "$1-$2");
+            e.target.value = v;
+        });
+
+        /* CRUD */
+        const params = new URLSearchParams(location.search);
+        const clienteId = params.get("id");
+
+        const form = document.getElementById("clienteForm");
+        const msg = document.getElementById("formMessage");
+        const btnExcluir = document.getElementById("btnExcluir");
+
+        if (clienteId) carregar();
+
+        function carregar() {
+            btnExcluir.style.display = "block";
+
+            get(ref(db, "clientes/" + clienteId)).then(snap => {
+                if (!snap.exists()) return;
+
+                const c = snap.val();
+                nome.value = c.nome;
+                documento.value = c.documento;
+                telefone.value = c.telefone;
+                email.value = c.email;
+                endereco.value = c.endereco;
+                cidade.value = c.cidade;
+                estado.value = c.estado;
+                obs.value = c.observacoes;
+            });
+        }
+
+        /* SALVAR */
+        form.addEventListener("submit", e => {
+            e.preventDefault();
+
+            const data = {
+                nome: nome.value,
+                documento: documento.value,
+                telefone: telefone.value,
+                email: email.value,
+                endereco: endereco.value,
+                cidade: cidade.value,
+                estado: estado.value,
+                observacoes: obs.value
+            };
+
+            const id = clienteId || Date.now();
+
+            set(ref(db, "clientes/" + id), data).then(() => {
+                msg.className = "form-message success";
+                msg.textContent = clienteId ? "✔ Cliente atualizado!" : "✔ Cliente cadastrado!";
+                msg.style.display = "block";
+
+                setTimeout(() => location.href = "clientes.html", 1200);
+            });
+        });
+
+        /* EXCLUIR */
+        btnExcluir.addEventListener("click", () => {
+            if (!confirm("Deseja excluir este cliente?")) return;
+
+            remove(ref(db, "clientes/" + clienteId)).then(() => {
+                alert("Cliente removido!");
+                location.href = "clientes.html";
+            });
+        });
+    </script>
+
+</body>
+</html>

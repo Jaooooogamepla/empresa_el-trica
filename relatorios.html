@@ -1,46 +1,175 @@
 <!-- relatorios.html -->
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Relatórios - Janol.Inej</title>
+
     <style>
-        body { font-family: Arial; margin: 0; }
-        .navbar { background: #34495e; padding: 15px; }
-        .navbar a { color: white; margin: 0 15px; text-decoration: none; }
-        .container { padding: 20px; }
-        .card { background: #f9f9f9; padding: 15px; margin: 10px 0; border-radius: 5px; }
-        button { padding: 8px 15px; cursor: pointer; }
+        * {
+            margin:0; padding:0;
+            box-sizing:border-box;
+            font-family:'Segoe UI', Tahoma, sans-serif;
+        }
+
+        body {
+            background:#f4f6f9;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            background:linear-gradient(135deg, #2c3e50, #34495e);
+            padding:15px 0;
+            box-shadow:0 4px 10px rgba(0,0,0,0.15);
+            position:sticky;
+            top:0;
+            z-index:10;
+        }
+        .nav-content {
+            max-width:1200px;
+            margin:auto;
+            padding:0 25px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+        }
+        .logo {
+            font-size:1.8em;
+            font-weight:bold;
+            color:white;
+            cursor:pointer;
+        }
+        .nav-links {
+            display:flex;
+            gap:30px;
+        }
+        .nav-links a {
+            color:white;
+            text-decoration:none;
+            padding:8px 18px;
+            border-radius:8px;
+            transition:.3s;
+        }
+        .nav-links a:hover {
+            background:rgba(255,255,255,0.15);
+        }
+        .nav-links .active {
+            background:rgba(255,255,255,0.22);
+        }
+
+        /* CONTEÚDO */
+        .container {
+            max-width:1100px;
+            margin:35px auto;
+            padding:0 20px;
+        }
+
+        h1 {
+            color:#2c3e50;
+            margin-bottom:20px;
+        }
+
+        /* CARD */
+        .card {
+            background:white;
+            padding:25px;
+            border-radius:15px;
+            margin-bottom:25px;
+            box-shadow:0 10px 30px rgba(0,0,0,0.08);
+            animation:fadeIn .5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity:0; transform:translateY(10px); }
+            to   { opacity:1; transform:translateY(0); }
+        }
+
+        .card h3 {
+            margin-bottom:8px;
+            color:#2c3e50;
+        }
+
+        .card p {
+            margin-bottom:15px;
+            color:#7f8c8d;
+        }
+
+        .btn {
+            background:linear-gradient(135deg, #3498db, #2c80b4);
+            color:white;
+            padding:12px 20px;
+            border:none;
+            border-radius:10px;
+            cursor:pointer;
+            font-weight:bold;
+            transition:.3s;
+        }
+
+        .btn:hover {
+            transform:translateY(-2px);
+            box-shadow:0 6px 18px rgba(0,0,0,0.2);
+        }
+
+        /* CONTADOR */
+        .contador {
+            background:#ecf5ff;
+            color:#2c3e50;
+            display:inline-block;
+            padding:6px 15px;
+            border-radius:999px;
+            font-weight:600;
+            margin-bottom:20px;
+        }
+
     </style>
 </head>
+
 <body>
-    <div class="navbar">
-        <a href="dashboard.html">📊 Dashboard</a>
-        <a href="relatorios.html">📈 Relatórios</a>
-    </div>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="nav-content">
+            <div class="logo" onclick="window.location.href='dashboard.html'">🏗️ JANOL.INEJ</div>
+
+            <div class="nav-links">
+                <a href="dashboard.html">📊 Dashboard</a>
+                <a href="projetos.html">🏗️ Projetos</a>
+                <a href="relatorios.html" class="active">📈 Relatórios</a>
+                <a href="funcionarios.html">👷 Funcionários</a>
+                <a href="configuracoes.html">⚙️ Configurações</a>
+            </div>
+        </div>
+    </nav>
 
     <div class="container">
+
         <h1>📈 Relatórios</h1>
-        
+
+        <div class="contador" id="contador">
+            0 relatórios gerados
+        </div>
+
+        <!-- RELATÓRIO FINANCEIRO -->
         <div class="card">
             <h3>📊 Relatório Financeiro</h3>
-            <p>Faturamento mensal e custos</p>
-            <button id="btnFinanceiro">Gerar Relatório</button>
+            <p>Análise de faturamento, despesas e custo operacional.</p>
+            <button class="btn" id="btnFinanceiro">Gerar Relatório</button>
         </div>
-        
+
+        <!-- RELATÓRIO PRODUTIVIDADE -->
         <div class="card">
             <h3>👥 Relatório de Produtividade</h3>
-            <p>Desempenho da equipe</p>
-            <button id="btnProdutividade">Gerar Relatório</button>
+            <p>Avaliação do desempenho e execução das equipes.</p>
+            <button class="btn" id="btnProdutividade">Gerar Relatório</button>
         </div>
+
     </div>
 
-    <!-- ============================= -->
-    <!--   FIREBASE - RELATÓRIOS       -->
-    <!-- ============================= -->
+    <!-- ===== FIREBASE ===== -->
     <script type="module">
-
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCjdryEhdWNcWZpcIciZApYdZX5jXcST3A",
@@ -56,32 +185,40 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // Botões
         const btnFinanceiro = document.getElementById("btnFinanceiro");
-        const btnProd = document.getElementById("btnProdutividade");
+        const btnProd       = document.getElementById("btnProdutividade");
+        const contador      = document.getElementById("contador");
 
-        // Registrar relatório financeiro
-        btnFinanceiro.addEventListener("click", () => {
-            set(ref(db, "relatorios/financeiro/" + Date.now()), {
-                tipo: "Relatório Financeiro",
-                data: new Date().toLocaleString()
-            })
-            .then(() => {
-                alert("📊 Relatório financeiro registrado no Firebase!");
-            })
-            .catch(err => alert("Erro: " + err));
+        // Atualizar contador de relatórios gerados
+        onValue(ref(db, "relatorios"), snap => {
+            if (!snap.exists()) {
+                contador.textContent = "0 relatórios gerados";
+                return;
+            }
+
+            const total = Object.values(snap.val()).flatMap(x => Object.values(x)).length;
+
+            contador.textContent = `${total} relatório${total > 1 ? "s" : ""} gerado${total > 1 ? "s" : ""}`;
         });
 
-        // Registrar relatório de produtividade
+        // Gerar relatório financeiro
+        btnFinanceiro.addEventListener("click", () => {
+            set(ref(db, "relatorios/financeiro/" + Date.now()), {
+                tipo: "Financeiro",
+                dataGeracao: new Date().toLocaleString()
+            }).then(() => {
+                alert("📊 Relatório financeiro registrado!");
+            });
+        });
+
+        // Gerar relatório de produtividade
         btnProd.addEventListener("click", () => {
             set(ref(db, "relatorios/produtividade/" + Date.now()), {
-                tipo: "Relatório de Produtividade",
-                data: new Date().toLocaleString()
-            })
-            .then(() => {
-                alert("👥 Relatório de produtividade registrado no Firebase!");
-            })
-            .catch(err => alert("Erro: " + err));
+                tipo: "Produtividade",
+                dataGeracao: new Date().toLocaleString()
+            }).then(() => {
+                alert("👥 Relatório de produtividade registrado!");
+            });
         });
 
     </script>

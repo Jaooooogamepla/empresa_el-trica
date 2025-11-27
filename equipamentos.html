@@ -1,104 +1,310 @@
-<!-- equipamentos.html -->
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Equipamentos - Janol.Inej</title>
+
     <style>
-        body { font-family: Arial; margin: 0; }
-        .navbar { background: #34495e; padding: 15px; }
-        .navbar a { color: white; margin: 0 15px; text-decoration: none; }
-        .container { padding: 20px; }
-        .card { background: #f9f9f9; padding: 15px; margin: 10px 0; border-radius: 5px; }
-        button { padding: 8px 15px; cursor: pointer; }
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', Tahoma, sans-serif; }
+        body { background:#f4f6f9; }
+
+        /* NAVBAR */
+        .navbar {
+            background:linear-gradient(135deg, #2c3e50, #34495e);
+            padding:15px 0;
+            box-shadow:0 5px 15px rgba(0,0,0,0.18);
+            position:sticky;
+            top:0;
+            z-index:100;
+        }
+
+        .nav-content {
+            max-width:1200px;
+            margin:auto;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            padding:0 25px;
+        }
+
+        .logo {
+            font-size:1.8em;
+            font-weight:bold;
+            color:white;
+            cursor:pointer;
+        }
+
+        .nav-links { display:flex; gap:30px; }
+        .nav-links a {
+            color:white;
+            text-decoration:none;
+            padding:8px 18px;
+            border-radius:10px;
+            transition:.3s;
+        }
+        .nav-links a:hover { background:rgba(255,255,255,0.18); transform:translateY(-2px); }
+        .active { background:rgba(255,255,255,0.25); }
+
+        /* CONTAINER */
+        .page-container {
+            max-width:1100px;
+            margin:35px auto;
+            padding:0 20px;
+        }
+
+        .page-header {
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:25px;
+        }
+
+        h1 {
+            color:#2c3e50;
+            font-size:1.9em;
+        }
+
+        .btn-primary {
+            background:linear-gradient(135deg, #27ae60, #1e8449);
+            color:white;
+            border:none;
+            padding:12px 20px;
+            border-radius:10px;
+            cursor:pointer;
+            transition:.3s;
+            font-weight:600;
+        }
+
+        .btn-primary:hover {
+            transform:translateY(-2px);
+            box-shadow:0 6px 18px rgba(0,0,0,0.2);
+        }
+
+        /* BUSCA */
+        .search-box {
+            display:flex;
+            align-items:center;
+            gap:10px;
+            background:#eef2f6;
+            padding:10px 15px;
+            border-radius:10px;
+            max-width:350px;
+            margin-bottom:15px;
+        }
+        .search-box input {
+            border:none;
+            outline:none;
+            background:transparent;
+            width:100%;
+        }
+
+        /* CARD */
+        .card {
+            background:white;
+            padding:20px;
+            border-radius:15px;
+            margin-bottom:15px;
+            box-shadow:0 5px 20px rgba(0,0,0,0.08);
+            animation: fadeCard .4s ease-out;
+        }
+
+        @keyframes fadeCard {
+            from { opacity:0; transform:translateY(10px); }
+            to { opacity:1; transform:translateY(0); }
+        }
+
+        .card h3 { color:#2c3e50; }
+        .status-pill {
+            padding:5px 10px;
+            font-size:12px;
+            border-radius:999px;
+            font-weight:600;
+            display:inline-block;
+            margin-top:8px;
+        }
+
+        .status-disponivel { background:#e8f8f5; color:#1e8449; }
+        .status-uso { background:#fff3cd; color:#b9770e; }
+        .status-quebrado { background:#f8d7da; color:#c0392b; }
+        .status-manutencao { background:#d6eaf8; color:#21618c; }
+
+        .actions { margin-top:15px; display:flex; gap:10px; }
+
+        .btn-sm {
+            padding:8px 12px;
+            border:none;
+            border-radius:8px;
+            cursor:pointer;
+            font-size:13px;
+            font-weight:600;
+            transition:.3s;
+        }
+
+        .edit-btn { background:#3498db; color:white; }
+        .delete-btn { background:#e74c3c; color:white; }
+        .edit-btn:hover { background:#2c80b4; }
+        .delete-btn:hover { background:#c0392b; }
+
+        .empty {
+            text-align:center;
+            padding:20px;
+            color:#7f8c8d;
+        }
     </style>
 </head>
+
 <body>
 
-    <div class="navbar">
-        <a href="dashboard.html">📊 Dashboard</a>
-        <a href="equipamentos.html">🔧 Equipamentos</a>
-    </div>
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="nav-content">
+            <div class="logo" onclick="window.location.href='dashboard.html'">🏗️ JANOL.INEJ</div>
 
-    <div class="container">
-        <h1>🔧 Equipamentos</h1>
-        <button id="btnNovo">➕ Novo Equipamento</button>
-        
-        <div id="listaEquipamentos">
-            <!-- Equipamentos serão carregados aqui -->
+            <div class="nav-links">
+                <a href="dashboard.html">📊 Dashboard</a>
+                <a href="clientes.html">👥 Clientes</a>
+                <a href="projetos.html">🏗️ Projetos</a>
+                <a class="active" href="equipamentos.html">🔧 Equipamentos</a>
+                <a href="funcionarios.html">👷 Funcionários</a>
+                <a href="configuracoes.html">⚙️ Configurações</a>
+            </div>
         </div>
+    </nav>
+
+    <div class="page-container">
+
+        <div class="page-header">
+            <h1>🔧 Equipamentos</h1>
+            <button class="btn-primary" id="btnNovo">➕ Novo Equipamento</button>
+        </div>
+
+        <div class="search-box">
+            <span>🔍</span>
+            <input type="text" id="busca" placeholder="Buscar equipamento...">
+        </div>
+
+        <div id="listaEquipamentos"></div>
+        <div id="emptyMsg" class="empty" style="display:none;">Nenhum equipamento cadastrado.</div>
+
     </div>
 
-    <!-- ========================================== -->
-    <!--     FIREBASE - EQUIPAMENTOS CONECTADO      -->
-    <!-- ========================================== -->
+    <!-- FIREBASE -->
     <script type="module">
-
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getDatabase, ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         const firebaseConfig = {
-            apiKey: "AIzaSyCjdryEhdWNcWZpcIciZApYdZX5jXcST3A",
-            authDomain: "janoline-7285c.firebaseapp.com",
-            databaseURL: "https://janoline-7285c-default-rtdb.firebaseio.com",
-            projectId: "janoline-7285c",
-            storageBucket: "janoline-7285c.firebasestorage.app",
-            messagingSenderId: "688131267684",
-            appId: "1:688131267684:web:6a3d976a092512e1fad371",
-            measurementId: "G-K767JLC4BP"
+            apiKey:"AIzaSyCjdryEhdWNcWZpcIciZApYdZX5jXcST3A",
+            authDomain:"janoline-7285c.firebaseapp.com",
+            databaseURL:"https://janoline-7285c-default-rtdb.firebaseio.com",
+            projectId:"janoline-7285c",
+            storageBucket:"janoline-7285c.firebasestorage.app",
+            messagingSenderId:"688131267684",
+            appId:"1:688131267684:web:6a3d976a092512e1fad371",
+            measurementId:"G-K767JLC4BP"
         };
 
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
         const lista = document.getElementById("listaEquipamentos");
+        const emptyMsg = document.getElementById("emptyMsg");
+        const busca = document.getElementById("busca");
         const btnNovo = document.getElementById("btnNovo");
 
-        // Criar novo equipamento
+        let cache = [];
+
+        // criar novo
         btnNovo.addEventListener("click", () => {
             const nome = prompt("Nome do equipamento:");
             const serie = prompt("Número de série:");
             const status = prompt("Status (Disponível / Em uso / Quebrado / Em manutenção):");
 
-            if (!nome || !serie || !status) {
-                alert("Preencha todos os campos!");
-                return;
-            }
+            if (!nome || !serie || !status) return alert("Preencha todos os campos!");
 
             const id = Date.now();
 
-            set(ref(db, "equipamentos/" + id), {
-                nome,
-                serie,
-                status
-            })
-            .then(() => alert("Equipamento cadastrado com sucesso!"))
-            .catch(err => alert("Erro ao salvar: " + err));
+            set(ref(db, "equipamentos/" + id), { id, nome, serie, status })
+                .then(() => alert("Equipamento cadastrado!"));
         });
 
-        // Carregar equipamentos automaticamente
-        const eqpRef = ref(db, "equipamentos/");
+        // carregar lista
+        onValue(ref(db, "equipamentos"), snapshot => {
+            lista.innerHTML = "";
+            cache = [];
 
-        onValue(eqpRef, (snapshot) => {
-            lista.innerHTML = ""; // Limpa antes de carregar
+            if (!snapshot.exists()) {
+                emptyMsg.style.display = "block";
+                return;
+            }
 
-            if (!snapshot.exists()) return;
+            snapshot.forEach(child => cache.push(child.val()));
 
-            const dados = snapshot.val();
+            emptyMsg.style.display = "none";
+            render(cache);
+        });
 
-            Object.values(dados).forEach(eq => {
+        // render cards
+        function render(listaEquip) {
+            lista.innerHTML = "";
+
+            listaEquip.forEach(eq => {
                 const card = document.createElement("div");
-                card.classList.add("card");
+                card.className = "card";
+
+                const badgeClass =
+                      eq.status.toLowerCase().includes("dispon")
+                        ? "status-disponivel"
+                    : eq.status.toLowerCase().includes("uso")
+                        ? "status-uso"
+                    : eq.status.toLowerCase().includes("queb")
+                        ? "status-quebrado"
+                    : "status-manutencao";
 
                 card.innerHTML = `
                     <h3>${eq.nome}</h3>
-                    <p>Nº Série: ${eq.serie}</p>
-                    <p><strong>Status:</strong> ${eq.status}</p>
+                    <p>Nº Série: <strong>${eq.serie}</strong></p>
+                    <span class="status-pill ${badgeClass}">${eq.status}</span>
+
+                    <div class="actions">
+                        <button class="btn-sm edit-btn" onclick="editar(${eq.id})">✏️ Editar</button>
+                        <button class="btn-sm delete-btn" onclick="excluir(${eq.id})">🗑️ Excluir</button>
+                    </div>
                 `;
 
                 lista.appendChild(card);
             });
+        }
+
+        // busca
+        busca.addEventListener("input", () => {
+            const t = busca.value.toLowerCase();
+            const filtrados = cache.filter(
+                e => e.nome.toLowerCase().includes(t) || e.serie.includes(t)
+            );
+            render(filtrados);
         });
 
+        // funções globais
+        window.excluir = id => {
+            if (confirm("Excluir equipamento?")) {
+                remove(ref(db, "equipamentos/" + id));
+            }
+        };
+
+        window.editar = id => {
+            const eq = cache.find(x => x.id == id);
+            if (!eq) return alert("Equipamento não encontrado!");
+
+            const nome = prompt("Nome:", eq.nome);
+            const serie = prompt("Número de série:", eq.serie);
+            const status = prompt("Status:", eq.status);
+
+            if (!nome || !serie || !status) return alert("Campos inválidos!");
+
+            set(ref(db, "equipamentos/" + id), { id, nome, serie, status });
+        };
     </script>
 
 </body>

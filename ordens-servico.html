@@ -1,0 +1,770 @@
+<!-- ordens-servico.html -->
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ordens de Serviço - Janol.Inej</title>
+
+    <style>
+        * {
+            margin: 0; padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+        }
+        body { background: #f4f6f9; }
+
+        /* NAVBAR PADRÃO */
+        .navbar {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            padding: 15px 0;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            animation: fadeInDown .5s ease-out;
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 25px;
+        }
+
+        .logo {
+            font-weight:bold;
+            font-size: 1.8em;
+            color:white;
+            cursor:pointer;
+        }
+
+        .nav-links {
+            display:flex;
+            gap:35px;
+        }
+
+        .nav-links a {
+            color:white;
+            text-decoration:none;
+            padding:8px 18px;
+            border-radius:10px;
+            transition:.3s;
+            font-size:15px;
+        }
+
+        .nav-links a:hover {
+            background:rgba(255,255,255,0.18);
+            transform:translateY(-2px);
+        }
+
+        .nav-links a.active {
+            background:rgba(255,255,255,0.22);
+        }
+
+        /* LAYOUT PRINCIPAL */
+        .page-container {
+            max-width: 1100px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
+
+        .page-header {
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            flex-wrap:wrap;
+            gap:10px;
+            margin-bottom:20px;
+        }
+
+        .page-title h1 {
+            font-size: 1.8em;
+            color:#2c3e50;
+        }
+        .page-title p {
+            color:#7f8c8d;
+            margin-top:5px;
+        }
+
+        .btn-primary {
+            background:linear-gradient(135deg, #3498db, #2980b9);
+            color:white;
+            border:none;
+            padding:12px 20px;
+            border-radius:12px;
+            cursor:pointer;
+            font-weight:600;
+            display:flex;
+            align-items:center;
+            gap:8px;
+            transition:.3s;
+        }
+        .btn-primary:hover {
+            transform:translateY(-2px);
+            box-shadow:0 8px 20px rgba(41, 128, 185, 0.4);
+        }
+
+        /* CARD LISTAGEM */
+        .card {
+            background:white;
+            border-radius:18px;
+            padding:20px 25px 25px;
+            box-shadow:0 12px 30px rgba(0,0,0,0.08);
+            animation: fadeIn .4s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity:0; transform:translateY(10px); }
+            to { opacity:1; transform:translateY(0); }
+        }
+
+        .toolbar {
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            flex-wrap:wrap;
+            gap:10px;
+            margin-bottom:15px;
+        }
+
+        .search-box {
+            display:flex;
+            align-items:center;
+            gap:8px;
+            background:#f0f3f7;
+            padding:8px 12px;
+            border-radius:10px;
+            flex:1;
+            max-width:350px;
+        }
+
+        .search-box span {
+            font-size:18px;
+        }
+
+        .search-box input {
+            border:none;
+            outline:none;
+            background:transparent;
+            width:100%;
+            font-size:14px;
+        }
+
+        .badge-count {
+            background:#ecf5ff;
+            color:#2c3e50;
+            padding:6px 12px;
+            border-radius:999px;
+            font-size:13px;
+            font-weight:600;
+        }
+
+        /* LISTA EM CARDS */
+        .os-list {
+            display:flex;
+            flex-direction:column;
+            gap:12px;
+            margin-top:10px;
+        }
+
+        .os-card {
+            background:#fdfdff;
+            border-radius:14px;
+            padding:15px 18px;
+            border:1px solid #ecf0f1;
+            display:flex;
+            justify-content:space-between;
+            align-items:flex-start;
+            gap:10px;
+            transition:.2s;
+        }
+
+        .os-card:hover {
+            background:#f7f9ff;
+            transform:translateY(-2px);
+            box-shadow:0 6px 16px rgba(0,0,0,0.05);
+        }
+
+        .os-main {
+            max-width:70%;
+        }
+
+        .os-title {
+            font-weight:600;
+            color:#2c3e50;
+            margin-bottom:4px;
+        }
+
+        .os-sub {
+            font-size:13px;
+            color:#7f8c8d;
+        }
+
+        .os-meta {
+            margin-top:6px;
+            font-size:13px;
+            color:#7f8c8d;
+        }
+
+        .os-meta span {
+            margin-right:10px;
+        }
+
+        .status-pill {
+            font-size:12px;
+            padding:4px 8px;
+            border-radius:999px;
+            font-weight:600;
+            display:inline-block;
+        }
+
+        .status-pendente { background:#fff4e6; color:#e67e22; }
+        .status-andamento { background:#e8f8f5; color:#148f77; }
+        .status-concluida { background:#eaf2ff; color:#1f6feb; }
+
+        .os-actions {
+            display:flex;
+            flex-direction:column;
+            gap:6px;
+            align-items:flex-end;
+        }
+
+        .btn-sm {
+            padding:6px 10px;
+            border:none;
+            border-radius:8px;
+            font-size:12px;
+            cursor:pointer;
+            display:inline-flex;
+            align-items:center;
+            gap:4px;
+            transition:.2s;
+        }
+
+        .btn-edit {
+            background:#3498db;
+            color:white;
+        }
+        .btn-edit:hover {
+            background:#2c80b4;
+        }
+
+        .btn-delete {
+            background:#e74c3c;
+            color:white;
+        }
+        .btn-delete:hover {
+            background:#c0392b;
+        }
+
+        .empty-state {
+            text-align:center;
+            padding:25px 10px;
+            color:#7f8c8d;
+            font-size:14px;
+        }
+
+        /* MODAL ESTILO APP MODERNO */
+        .modal-overlay {
+            position:fixed;
+            inset:0;
+            background:rgba(0,0,0,0.35);
+            backdrop-filter: blur(4px);
+            display:none;
+            align-items:center;
+            justify-content:center;
+            z-index:200;
+            animation: fadeIn .25s ease-out;
+        }
+
+        .modal {
+            background:white;
+            border-radius:20px;
+            padding:25px 25px 20px;
+            width:100%;
+            max-width:480px;
+            box-shadow:0 18px 45px rgba(0,0,0,0.25);
+            animation: scaleIn .25s ease-out;
+        }
+
+        @keyframes scaleIn {
+            from { opacity:0; transform:scale(0.96) translateY(6px); }
+            to { opacity:1; transform:scale(1) translateY(0); }
+        }
+
+        .modal-header {
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:15px;
+        }
+
+        .modal-header h2 {
+            font-size:1.3em;
+            color:#2c3e50;
+        }
+
+        .modal-close {
+            border:none;
+            background:transparent;
+            font-size:20px;
+            cursor:pointer;
+            color:#7f8c8d;
+        }
+
+        .modal-body {
+            display:flex;
+            flex-direction:column;
+            gap:12px;
+        }
+
+        .modal-body label {
+            font-size:14px;
+            font-weight:600;
+            color:#2c3e50;
+            margin-bottom:3px;
+        }
+
+        .modal-body input,
+        .modal-body select,
+        .modal-body textarea {
+            width:100%;
+            padding:10px 12px;
+            border-radius:10px;
+            border:2px solid #e0e0e0;
+            font-size:14px;
+            transition:.2s;
+        }
+
+        .modal-body input:focus,
+        .modal-body select:focus,
+        .modal-body textarea:focus {
+            border-color:#3498db;
+            box-shadow:0 0 0 3px rgba(52,152,219,0.15);
+            outline:none;
+        }
+
+        .modal-footer {
+            display:flex;
+            justify-content:flex-end;
+            gap:10px;
+            margin-top:15px;
+        }
+
+        .btn-light {
+            background:#ecf0f1;
+            color:#2c3e50;
+        }
+
+        .btn-light:hover {
+            background:#dde2e4;
+        }
+
+        .small-hint {
+            font-size:12px;
+            color:#95a5a6;
+        }
+
+        @media (max-width: 768px) {
+            .nav-content {
+                flex-direction:column;
+                align-items:flex-start;
+                gap:10px;
+            }
+            .nav-links { flex-wrap:wrap; gap:12px; }
+
+            .page-header {
+                flex-direction:column;
+                align-items:flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="nav-content">
+            <div class="logo" onclick="window.location.href='dashboard.html'">
+                🏗️ JANOL.INEJ
+            </div>
+            <div class="nav-links">
+                <a href="dashboard.html">📊 Dashboard</a>
+                <a href="clientes.html">👥 Clientes</a>
+                <a href="projetos.html">🏗️ Projetos</a>
+                <a href="ordens-servico.html" class="active">📋 Ordens de Serviço</a>
+                <a href="equipamentos.html">🔧 Equipamentos</a>
+                <a href="funcionarios.html">👷 Funcionários</a>
+                <a href="configuracoes.html">⚙️ Configurações</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="page-container">
+        <div class="page-header">
+            <div class="page-title">
+                <h1>📋 Ordens de Serviço</h1>
+                <p>Controle das OS em campo, responsáveis e prazos.</p>
+            </div>
+
+            <button class="btn-primary" onclick="abrirModalNovaOS()">
+                ➕ Nova OS
+            </button>
+        </div>
+
+        <div class="card">
+            <div class="toolbar">
+                <div class="search-box">
+                    <span>🔍</span>
+                    <input type="text" id="buscaOS" placeholder="Buscar por título, responsável ou status...">
+                </div>
+                <div class="badge-count" id="badgeCountOS">
+                    0 OS encontradas
+                </div>
+            </div>
+
+            <div class="os-list" id="listaOS">
+                <!-- OS vão ser inseridas aqui -->
+            </div>
+
+            <div id="emptyStateOS" class="empty-state" style="display:none;">
+                😕 Nenhuma OS cadastrada ainda. Clique em <b>"Nova OS"</b> para criar a primeira.
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL CRIAÇÃO / EDIÇÃO DE OS -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="modalTitulo">➕ Nova Ordem de Serviço</h2>
+                <button class="modal-close" onclick="fecharModal()">✖</button>
+            </div>
+
+            <form id="formOS">
+                <div class="modal-body">
+                    <div>
+                        <label>Título da OS</label>
+                        <input type="text" id="osTitulo" placeholder="Ex: Troca de quadro de distribuição" required>
+                    </div>
+
+                    <div>
+                        <label>Responsável (puxado de Funcionários)</label>
+                        <select id="osResponsavel" required>
+                            <option value="">Carregando funcionários...</option>
+                        </select>
+                        <div class="small-hint" id="hintResp"></div>
+                    </div>
+
+                    <div>
+                        <label>Prazo</label>
+                        <input type="date" id="osPrazo" required>
+                    </div>
+
+                    <div>
+                        <label>Status</label>
+                        <select id="osStatus" required>
+                            <option value="Pendente">Pendente</option>
+                            <option value="Em andamento">Em andamento</option>
+                            <option value="Concluída">Concluída</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label>Descrição / Observações</label>
+                        <textarea id="osObs" rows="3" placeholder="Descreva detalhes importantes da OS..."></textarea>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn-sm btn-light" onclick="fecharModal()">Cancelar</button>
+                    <button type="submit" class="btn-sm btn-primary" id="btnSalvarOS">
+                        💾 Salvar OS
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ====================================== -->
+    <!--        FIREBASE - ORDENS DE SERVIÇO    -->
+    <!-- ====================================== -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCjdryEhdWNcWZpcIciZApYdZX5jXcST3A",
+            authDomain: "janoline-7285c.firebaseapp.com",
+            databaseURL: "https://janoline-7285c-default-rtdb.firebaseio.com",
+            projectId: "janoline-7285c",
+            storageBucket: "janoline-7285c.firebasestorage.app",
+            messagingSenderId: "688131267684",
+            appId: "1:688131267684:web:6a3d976a092512e1fad371",
+            measurementId: "G-K767JLC4BP"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        const listaOS = document.getElementById("listaOS");
+        const emptyStateOS = document.getElementById("emptyStateOS");
+        const badgeCountOS = document.getElementById("badgeCountOS");
+        const buscaOS = document.getElementById("buscaOS");
+
+        const modalOverlay = document.getElementById("modalOverlay");
+        const modalTitulo = document.getElementById("modalTitulo");
+        const formOS = document.getElementById("formOS");
+        const osTitulo = document.getElementById("osTitulo");
+        const osResponsavel = document.getElementById("osResponsavel");
+        const osPrazo = document.getElementById("osPrazo");
+        const osStatus = document.getElementById("osStatus");
+        const osObs = document.getElementById("osObs");
+        const btnSalvarOS = document.getElementById("btnSalvarOS");
+        const hintResp = document.getElementById("hintResp");
+
+        let funcionariosCache = [];
+        let osCache = [];
+        let osEditandoId = null;
+
+        // ==============================
+        //   CARREGAR FUNCIONÁRIOS
+        // ==============================
+        const funcRef = ref(db, "funcionarios/");
+        onValue(funcRef, (snapshot) => {
+            funcionariosCache = [];
+            osResponsavel.innerHTML = "";
+
+            if (!snapshot.exists()) {
+                osResponsavel.innerHTML = '<option value="">Nenhum funcionário cadastrado</option>';
+                osResponsavel.disabled = true;
+                hintResp.textContent = "Cadastre funcionários na tela de Funcionários para poder atribuí-los às OS.";
+                return;
+            }
+
+            osResponsavel.disabled = false;
+            hintResp.textContent = "Lista carregada automaticamente do cadastro de funcionários.";
+
+            snapshot.forEach(child => {
+                const id = child.key;
+                const f = child.val();
+                funcionariosCache.push({ id, ...f });
+            });
+
+            osResponsavel.innerHTML = '<option value="">Selecione o responsável...</option>';
+            funcionariosCache.forEach(f => {
+                const opt = document.createElement("option");
+                opt.value = f.id;
+                opt.textContent = `${f.nome} (${f.cargo || "Função não informada"})`;
+                osResponsavel.appendChild(opt);
+            });
+        });
+
+        // ==============================
+        //   CARREGAR OS EM TEMPO REAL
+        // ==============================
+        const osRef = ref(db, "ordensServico/");
+
+        onValue(osRef, (snapshot) => {
+            osCache = [];
+            listaOS.innerHTML = "";
+
+            if (!snapshot.exists()) {
+                emptyStateOS.style.display = "block";
+                badgeCountOS.textContent = "0 OS encontradas";
+                return;
+            }
+
+            snapshot.forEach(child => {
+                const id = child.key;
+                const os = child.val();
+                osCache.push({ id, ...os });
+            });
+
+            renderOS(osCache);
+        });
+
+        function renderOS(lista) {
+            listaOS.innerHTML = "";
+
+            if (lista.length === 0) {
+                emptyStateOS.style.display = "block";
+                badgeCountOS.textContent = "0 OS encontradas";
+                return;
+            } else {
+                emptyStateOS.style.display = "none";
+            }
+
+            lista.forEach(os => {
+                const card = document.createElement("div");
+                card.className = "os-card";
+
+                const statusClass = os.status === "Concluída"
+                    ? "status-concluida"
+                    : os.status === "Em andamento"
+                        ? "status-andamento"
+                        : "status-pendente";
+
+                const prazoLabel = os.prazo
+                    ? os.prazo.split("-").reverse().join("/")
+                    : "-";
+
+                card.innerHTML = `
+                    <div class="os-main">
+                        <div class="os-title">${os.titulo || "-"}</div>
+                        <div class="os-sub">
+                            🧑‍🔧 <strong>${os.responsavelNome || "Sem responsável"}</strong>
+                        </div>
+                        <div class="os-meta">
+                            <span>📅 Prazo: <strong>${prazoLabel}</strong></span>
+                            <span class="status-pill ${statusClass}">${os.status || "Sem status"}</span>
+                        </div>
+                        ${os.observacoes ? `<div class="os-meta">📝 ${os.observacoes}</div>` : ""}
+                    </div>
+                    <div class="os-actions">
+                        <button class="btn-sm btn-edit" onclick="editarOS('${os.id}')">✏️ Editar</button>
+                        <button class="btn-sm btn-delete" onclick="excluirOS('${os.id}')">🗑️ Excluir</button>
+                    </div>
+                `;
+
+                listaOS.appendChild(card);
+            });
+
+            badgeCountOS.textContent = `${lista.length} OS ${lista.length > 1 ? "encontradas" : "encontrada"}`;
+        }
+
+        // BUSCA
+        buscaOS.addEventListener("input", () => {
+            const termo = buscaOS.value.toLowerCase().trim();
+
+            if (!termo) {
+                renderOS(osCache);
+                return;
+            }
+
+            const filtradas = osCache.filter(os => {
+                const titulo = (os.titulo || "").toLowerCase();
+                const resp = (os.responsavelNome || "").toLowerCase();
+                const status = (os.status || "").toLowerCase();
+                return titulo.includes(termo) || resp.includes(termo) || status.includes(termo);
+            });
+
+            renderOS(filtradas);
+        });
+
+        // ==============================
+        //   MODAL (ABRIR/FECHAR)
+        // ==============================
+        window.abrirModalNovaOS = function() {
+            osEditandoId = null;
+            modalTitulo.textContent = "➕ Nova Ordem de Serviço";
+            btnSalvarOS.textContent = "💾 Salvar OS";
+
+            formOS.reset();
+            if (osResponsavel.options.length === 0) {
+                osResponsavel.innerHTML = '<option value="">Carregando funcionários...</option>';
+            }
+
+            modalOverlay.style.display = "flex";
+        };
+
+        window.fecharModal = function() {
+            modalOverlay.style.display = "none";
+        };
+
+        // ==============================
+        //   EDITAR OS
+        // ==============================
+        window.editarOS = function(id) {
+            const os = osCache.find(o => o.id === id);
+            if (!os) return;
+
+            osEditandoId = id;
+            modalTitulo.textContent = "✏️ Editar Ordem de Serviço";
+            btnSalvarOS.textContent = "💾 Salvar Alterações";
+
+            osTitulo.value = os.titulo || "";
+            osPrazo.value = os.prazo || "";
+            osStatus.value = os.status || "Pendente";
+            osObs.value = os.observacoes || "";
+
+            if (os.responsavelId && osResponsavel.querySelector(`option[value="${os.responsavelId}"]`)) {
+                osResponsavel.value = os.responsavelId;
+            } else {
+                osResponsavel.value = "";
+            }
+
+            modalOverlay.style.display = "flex";
+        };
+
+        // ==============================
+        //   EXCLUIR OS
+        // ==============================
+        window.excluirOS = function(id) {
+            if (!confirm("Tem certeza que deseja excluir esta OS?")) return;
+
+            remove(ref(db, "ordensServico/" + id))
+                .then(() => alert("OS excluída com sucesso!"))
+                .catch(err => alert("Erro ao excluir: " + err));
+        };
+
+        // ==============================
+        //   SALVAR (CRIAR / EDITAR)
+        // ==============================
+        formOS.addEventListener("submit", (e) => {
+            e.preventDefault();
+
+            if (osResponsavel.disabled) {
+                alert("Não há funcionários cadastrados para atribuir à OS.");
+                return;
+            }
+
+            const titulo = osTitulo.value.trim();
+            const prazo = osPrazo.value;
+            const status = osStatus.value;
+            const observacoes = osObs.value.trim();
+
+            const respId = osResponsavel.value;
+            const respOption = osResponsavel.options[osResponsavel.selectedIndex];
+            const respNome = respOption ? respOption.textContent : "";
+
+            if (!titulo || !prazo || !status || !respId) {
+                alert("Preencha todos os campos obrigatórios.");
+                return;
+            }
+
+            const id = osEditandoId || Date.now().toString();
+
+            const osData = {
+                id,
+                titulo,
+                responsavelId: respId,
+                responsavelNome: respNome,
+                prazo,
+                status,
+                observacoes
+            };
+
+            set(ref(db, "ordensServico/" + id), osData)
+                .then(() => {
+                    alert(osEditandoId ? "OS atualizada com sucesso!" : "OS criada com sucesso!");
+                    fecharModal();
+                })
+                .catch(err => alert("Erro ao salvar: " + err));
+        });
+
+        // Fechar modal clicando fora
+        modalOverlay.addEventListener("click", (e) => {
+            if (e.target === modalOverlay) fecharModal();
+        });
+    </script>
+</body>
+</html>

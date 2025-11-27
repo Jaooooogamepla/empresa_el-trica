@@ -1,98 +1,238 @@
+<!-- dashboard.html -->
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Janol.Inej</title>
+
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background: #f8f9fa; }
-        .navbar { background: linear-gradient(135deg, #2c3e50, #34495e); color: white; padding: 0 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .nav-content { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; padding: 15px 0; }
-        .logo { font-size: 1.8em; font-weight: bold; }
-        .nav-links { display: flex; gap: 30px; }
-        .nav-links a { color: white; text-decoration: none; padding: 10px 20px; border-radius: 8px; transition: background 0.3s; }
-        .nav-links a:hover, .nav-links a.active { background: rgba(255,255,255,0.1); }
-        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
-        .welcome-banner { background: linear-gradient(135deg, #3498db, #2980b9); color: white; padding: 40px; border-radius: 15px; margin-bottom: 30px; text-align: center; }
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px; }
-        .stat-card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); text-align: center; transition: transform 0.3s; }
-        .stat-card:hover { transform: translateY(-5px); }
-        .stat-icon { font-size: 2.5em; margin-bottom: 15px; }
-        .stat-number { font-size: 2em; font-weight: bold; color: #2c3e50; margin: 10px 0; }
-        .quick-actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 30px; }
-        .action-btn { background: white; border: 2px solid #e0e0e0; padding: 20px; border-radius: 10px; text-align: center; text-decoration: none; color: #2c3e50; transition: all 0.3s; cursor: pointer; }
-        .action-btn:hover { border-color: #3498db; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(52, 152, 219, 0.2); }
-        .action-icon { font-size: 2em; margin-bottom: 10px; display: block; }
+        * {
+            margin:0; padding:0;
+            box-sizing:border-box;
+            font-family:'Segoe UI', Tahoma, sans-serif;
+        }
+
+        body {
+            background:#f4f6f9;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            background:linear-gradient(135deg, #2c3e50, #34495e);
+            padding:15px 0;
+            box-shadow:0 4px 10px rgba(0,0,0,0.15);
+            position:sticky;
+            top:0;
+            z-index:10;
+        }
+        .nav-content {
+            max-width:1200px;
+            padding:0 25px;
+            margin:auto;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+        }
+        .logo {
+            font-size:1.8em;
+            font-weight:bold;
+            color:white;
+            cursor:pointer;
+        }
+        .nav-links {
+            display:flex;
+            gap:30px;
+        }
+        .nav-links a {
+            color:white;
+            padding:8px 18px;
+            text-decoration:none;
+            border-radius:8px;
+            transition:.3s;
+        }
+        .nav-links a:hover {
+            background:rgba(255,255,255,0.15);
+        }
+        .nav-links .active {
+            background:rgba(255,255,255,0.22);
+        }
+
+        /* CONTEÚDO */
+        .container {
+            max-width:1200px;
+            margin:35px auto;
+            padding:0 20px;
+        }
+
+        .welcome-banner {
+            text-align:center;
+            padding:40px;
+            border-radius:15px;
+            background:linear-gradient(135deg, #3498db, #2980b9);
+            color:white;
+            margin-bottom:35px;
+            box-shadow:0 10px 20px rgba(0,0,0,0.15);
+            animation:fadeIn .6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity:0; transform:translateY(10px); }
+            to   { opacity:1; transform:translateY(0); }
+        }
+
+        /* CARDS DE ESTATÍSTICA */
+        .stats-grid {
+            display:grid;
+            grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));
+            gap:25px;
+        }
+
+        .stat-card {
+            background:white;
+            padding:30px 20px;
+            border-radius:15px;
+            text-align:center;
+            box-shadow:0 10px 30px rgba(0,0,0,0.08);
+            transition:.3s;
+            animation:fadeIn .6s ease-out;
+        }
+
+        .stat-card:hover {
+            transform:translateY(-5px);
+        }
+
+        .stat-icon {
+            font-size:2.3em;
+            margin-bottom:10px;
+        }
+
+        .stat-number {
+            font-size:2.2em;
+            font-weight:bold;
+            color:#2c3e50;
+            margin:5px 0;
+        }
+
+        /* AÇÕES RÁPIDAS */
+        .quick-actions {
+            display:grid;
+            grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
+            gap:20px;
+            margin-top:40px;
+        }
+
+        .action-btn {
+            background:white;
+            padding:25px;
+            border-radius:12px;
+            border:2px solid #e0e0e0;
+            text-align:center;
+            cursor:pointer;
+            text-decoration:none;
+            color:#2c3e50;
+            transition:.3s;
+            box-shadow:0 4px 10px rgba(0,0,0,0.05);
+            font-weight:600;
+        }
+
+        .action-btn:hover {
+            border-color:#3498db;
+            transform:translateY(-3px);
+            box-shadow:0 10px 25px rgba(52,152,219,0.2);
+        }
+
+        .action-icon {
+            font-size:2.4em;
+            margin-bottom:10px;
+            display:block;
+        }
+
     </style>
 </head>
+
 <body>
 
+    <!-- NAVBAR -->
     <nav class="navbar">
         <div class="nav-content">
-            <div class="logo">🏗️ JANOL.INEJ</div>
+            <div class="logo" onclick="window.location.href='dashboard.html'">🏗️ JANOL.INEJ</div>
+
             <div class="nav-links">
                 <a href="dashboard.html" class="active">📊 Dashboard</a>
                 <a href="clientes.html">👥 Clientes</a>
                 <a href="projetos.html">🏗️ Projetos</a>
                 <a href="licitacoes.html">📑 Licitações</a>
+                <a href="relatorios.html">📈 Relatórios</a>
                 <a href="configuracoes.html">⚙️ Configurações</a>
             </div>
         </div>
     </nav>
 
     <div class="container">
+
         <div class="welcome-banner">
-            <h1>Bem-vindo de volta, Administrador! 👋</h1>
-            <p>Aqui está o resumo da sua empresa hoje</p>
+            <h1>Bem-vindo de volta! 👋</h1>
+            <p>Aqui está um resumo atualizado da sua empresa hoje.</p>
         </div>
 
+        <!-- ESTATÍSTICAS -->
         <div class="stats-grid">
+
             <div class="stat-card">
                 <div class="stat-icon">👥</div>
                 <div class="stat-number" id="totalClientes">0</div>
                 <div>Clientes Ativos</div>
             </div>
+
             <div class="stat-card">
                 <div class="stat-icon">🏗️</div>
                 <div class="stat-number" id="totalProjetos">0</div>
                 <div>Projetos em Andamento</div>
             </div>
+
             <div class="stat-card">
                 <div class="stat-icon">💰</div>
-                <div class="stat-number" id="faturamentoMensal">R$ 0</div>
+                <div class="stat-number" id="faturamentoMensal">R$ 35.200</div>
                 <div>Faturamento Mensal</div>
             </div>
+
             <div class="stat-card">
                 <div class="stat-icon">✅</div>
                 <div class="stat-number" id="projetosConcluidos">0</div>
                 <div>Projetos Concluídos</div>
             </div>
+
         </div>
 
+        <!-- AÇÕES RÁPIDAS -->
         <div class="quick-actions">
-            <a href="cadastro-cliente.html" class="action-btn">
+
+            <a href="cadastrar-cliente.html" class="action-btn">
                 <span class="action-icon">➕</span>
                 Novo Cliente
             </a>
-            <a href="cadastro-projeto.html" class="action-btn">
+
+            <a href="projetos.html" class="action-btn">
                 <span class="action-icon">🏗️</span>
                 Novo Projeto
             </a>
+
             <a href="relatorios.html" class="action-btn">
                 <span class="action-icon">📈</span>
                 Relatórios
             </a>
+
             <a href="ordens-servico.html" class="action-btn">
                 <span class="action-icon">📋</span>
                 Ordens de Serviço
             </a>
+
         </div>
+
     </div>
 
-    <!-- ======================================== -->
-    <!--         FIREBASE - DASHBOARD             -->
-    <!-- ======================================== -->
+    <!-- FIREBASE DASHBOARD -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
@@ -111,41 +251,32 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // Referências
         const clientesRef = ref(db, "clientes/");
         const projetosRef = ref(db, "projetos/");
 
-        // DOM
         const totalClientes = document.getElementById("totalClientes");
         const totalProjetos = document.getElementById("totalProjetos");
-        const faturamentoMensal = document.getElementById("faturamentoMensal");
         const projetosConcluidos = document.getElementById("projetosConcluidos");
 
-        // 🔹 TOTAL DE CLIENTES
-        onValue(clientesRef, (snap) => {
+        // Clientes
+        onValue(clientesRef, snap => {
             totalClientes.textContent = snap.exists() ? Object.keys(snap.val()).length : 0;
         });
 
-        // 🔹 TOTAL DE PROJETOS
-        onValue(projetosRef, (snap) => {
+        // Projetos
+        onValue(projetosRef, snap => {
             if (!snap.exists()) {
-                totalProjetos.textContent = 0;
-                projetosConcluidos.textContent = 0;
+                totalProjetos.textContent = "0";
+                projetosConcluidos.textContent = "0";
                 return;
             }
 
-            const dados = snap.val();
-            const lista = Object.values(dados);
-
+            const lista = Object.values(snap.val());
             totalProjetos.textContent = lista.length;
 
-            // Projetos concluídos
-            const concluidos = lista.filter(p => (p.status || "").toLowerCase() === "concluído");
+            const concluidos = lista.filter(p => p.status?.toLowerCase() === "concluído");
             projetosConcluidos.textContent = concluidos.length;
         });
-
-        // 🔹 FUTURO: Faturamento pode puxar de outra tabela
-        faturamentoMensal.textContent = "R$ 45K";
 
     </script>
 

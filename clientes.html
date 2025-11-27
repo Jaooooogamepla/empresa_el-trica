@@ -3,145 +3,365 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastrar Cliente - Janol.Inej</title>
+    <title>Clientes - Janol.Inej</title>
 
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background: #f8f9fa; }
-        .navbar { background: linear-gradient(135deg, #2c3e50, #34495e); color: white; padding: 0 20px; }
-        .nav-content { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; padding: 15px 0; }
-        .logo { font-size: 1.8em; font-weight: bold; }
-        .nav-links { display: flex; gap: 30px; }
-        .nav-links a { color: white; text-decoration: none; padding: 10px 20px; border-radius: 8px; transition: background 0.3s; }
-        .nav-links a:hover { background: rgba(255,255,255,0.1); }
-        .container { max-width: 800px; margin: 30px auto; padding: 0 20px; }
-        .form-card { background: white; padding: 40px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-        .form-header { text-align: center; margin-bottom: 30px; }
-        .form-header h1 { color: #2c3e50; margin-bottom: 10px; }
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .form-group { margin-bottom: 20px; }
-        .form-group.full-width { grid-column: 1 / -1; }
-        label { display: block; margin-bottom: 8px; color: #2c3e50; font-weight: 600; }
-        input, select, textarea { width: 100%; padding: 15px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 16px; transition: all 0.3s; }
-        input:focus, select:focus, textarea:focus { border-color: #3498db; outline: none; box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1); }
-        .btn-group { grid-column: 1 / -1; display: flex; gap: 15px; margin-top: 30px; }
-        .btn { flex: 1; padding: 15px; border: none; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s; }
-        .btn-primary { background: linear-gradient(135deg, #27ae60, #219a52); color: white; }
-        .btn-secondary { background: #95a5a6; color: white; }
-        .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
-
-        .form-message { padding: 15px; border-radius: 10px; margin-top: 20px; text-align: center; display: none; }
-        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
-
-        /* Botão excluir */
-        .btn-delete {
-            width: 100%;
-            margin-top: 15px;
-            padding: 15px;
-            background: #e74c3c;
-            color: white;
-            border: none;
-            font-weight: bold;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: 0.3s;
+        * {
+            margin: 0; padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
         }
-        .btn-delete:hover {
-            background: #c0392b;
+
+        body { 
+            background: #f4f6f9; 
+            animation: fadePage .4s ease-in-out;
+        }
+
+        @keyframes fadePage {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* NAVBAR */
+        .navbar {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            padding: 15px 0;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.20);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            animation: slideDown .5s ease-out;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-20px); opacity:0; }
+            to { transform: translateY(0); opacity:1; }
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 25px;
+        }
+
+        .logo {
+            font-weight:bold;
+            font-size: 1.8em;
+            color:white;
+            cursor:pointer;
+            transition:.3s;
+        }
+
+        .logo:hover { opacity: .8; }
+
+        .nav-links {
+            display:flex;
+            gap:35px;
+        }
+
+        .nav-links a {
+            color:white;
+            text-decoration:none;
+            padding:8px 18px;
+            border-radius:10px;
+            transition:.3s;
+            font-size:15px;
+        }
+
+        .nav-links a:hover {
+            background:rgba(255,255,255,0.17);
+            transform:translateY(-2px);
+        }
+
+        .nav-links .active {
+            background:rgba(255,255,255,0.22);
+        }
+
+        /* CONTEÚDO */
+        .page-container {
+            max-width: 1100px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
+
+        .page-header {
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:25px;
+            animation: fadeUp .6s ease-out;
+        }
+
+        @keyframes fadeUp {
+            from { opacity:0; transform: translateY(20px); }
+            to { opacity:1; transform: translateY(0); }
+        }
+
+        .page-title h1 {
+            font-size: 1.8em;
+            color:#2c3e50;
+        }
+        .page-title p {
+            color:#7f8c8d;
+            margin-top:5px;
+        }
+
+        .btn-primary {
+            background:linear-gradient(135deg, #27ae60, #1e8449);
+            color:white;
+            border:none;
+            padding:12px 20px;
+            border-radius:10px;
+            cursor:pointer;
+            font-weight:600;
+            display:flex;
+            align-items:center;
+            gap:8px;
+            transition:.3s;
+        }
+
+        .btn-primary:hover {
+            transform:translateY(-2px);
+            box-shadow:0 6px 18px rgba(0,0,0,0.18);
+        }
+
+        /* CARD LISTAGEM */
+        .card {
+            background:white;
+            border-radius:15px;
+            padding:25px;
+            box-shadow:0 10px 30px rgba(0,0,0,0.08);
+            animation: fadeContent .5s ease-out;
+        }
+
+        @keyframes fadeContent {
+            from { opacity:0; transform: scale(.97); }
+            to { opacity:1; transform: scale(1); }
+        }
+
+        .toolbar {
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            flex-wrap:wrap;
+            gap:10px;
+            margin-bottom:20px;
+        }
+
+        .search-box {
+            display:flex;
+            align-items:center;
+            gap:8px;
+            background:#f0f3f7;
+            padding:8px 12px;
+            border-radius:10px;
+            flex:1;
+            max-width:350px;
+            transition:.2s;
+        }
+
+        .search-box:hover {
+            box-shadow:0 3px 10px rgba(0,0,0,0.10);
+        }
+
+        .search-box input {
+            border:none;
+            outline:none;
+            background:transparent;
+            width:100%;
+            font-size:14px;
+        }
+
+        .badge-count {
+            background:#ecf5ff;
+            color:#2c3e50;
+            padding:6px 12px;
+            border-radius:999px;
+            font-size:13px;
+            font-weight:600;
+        }
+
+        /* TABELA */
+        table {
+            width:100%;
+            border-collapse:collapse;
+            margin-top:10px;
+        }
+
+        thead {
+            background:#f7f9fc;
+        }
+
+        th, td {
+            padding:12px 10px;
+            text-align:left;
+            font-size:14px;
+        }
+
+        th {
+            font-weight:600;
+            color:#34495e;
+        }
+
+        tbody tr {
+            border-bottom:1px solid #ecf0f1;
+            transition:.2s;
+        }
+
+        tbody tr:hover {
+            background:#f9fbff;
+            transform:scale(1.005);
+        }
+
+        .tag-city {
+            font-size:12px;
+            background:#e8f8f5;
+            color:#148f77;
+            padding:3px 8px;
+            border-radius:999px;
+        }
+
+        .tag-doc {
+            font-size:12px;
+            background:#ecf0f1;
+            padding:3px 8px;
+            border-radius:999px;
+        }
+
+        .status-pill {
+            font-size:12px;
+            padding:4px 8px;
+            border-radius:999px;
+            background:#f0f3f7;
+        }
+
+        /* AÇÕES */
+        .actions {
+            display:flex;
+            gap:8px;
+        }
+
+        .btn-sm {
+            padding:6px 10px;
+            border:none;
+            border-radius:8px;
+            font-size:12px;
+            cursor:pointer;
+            display:flex;
+            align-items:center;
+            gap:4px;
+            transition:.2s;
+        }
+
+        .btn-edit {
+            background:#3498db;
+            color:white;
+        }
+
+        .btn-edit:hover { background:#2c80b4; }
+
+        .btn-delete {
+            background:#e74c3c;
+            color:white;
+        }
+
+        .btn-delete:hover { background:#c0392b; }
+
+        .empty-state {
+            text-align:center;
+            padding:25px 10px;
+            color:#7f8c8d;
+            font-size:14px;
+        }
+
+        /* RESPONSIVO */
+        @media (max-width: 768px) {
+            thead { display:none; }
+            table, tbody, tr, td { display:block; width:100%; }
+            tr { 
+                margin-bottom:12px; 
+                background:#fafbff; 
+                border-radius:10px;
+                padding:10px;
+            }
+            td { padding:6px 0; }
+            td::before {
+                content: attr(data-label);
+                font-weight:600;
+                color:#7f8c8d;
+                display:block;
+            }
+            .actions { justify-content:flex-end; }
         }
     </style>
 </head>
-
 <body>
 
+    <!-- NAVBAR -->
     <nav class="navbar">
         <div class="nav-content">
-            <div class="logo">🏗️ JANOL.INEJ</div>
+            <div class="logo" onclick="window.location.href='dashboard.html'">🏗️ JANOL.INEJ</div>
             <div class="nav-links">
                 <a href="dashboard.html">📊 Dashboard</a>
-                <a href="clientes.html">👥 Clientes</a>
+                <a class="active" href="clientes.html">👥 Clientes</a>
                 <a href="projetos.html">🏗️ Projetos</a>
+                <a href="equipamentos.html">🔧 Equipamentos</a>
+                <a href="funcionarios.html">👷 Funcionários</a>
+                <a href="configuracoes.html">⚙️ Configurações</a>
             </div>
         </div>
     </nav>
 
-    <div class="container">
-        <div class="form-card">
-            <div class="form-header">
-                <h1>👥 Cadastrar Novo Cliente</h1>
-                <p>Preencha os dados do cliente abaixo</p>
+    <div class="page-container">
+
+        <div class="page-header">
+            <div class="page-title">
+                <h1>👥 Clientes Cadastrados</h1>
+                <p>Gerencie todos os clientes da empresa.</p>
             </div>
 
-            <form id="clienteForm">
-                <div class="form-grid">
+            <button class="btn-primary" onclick="window.location.href='cadastrar-cliente.html'">
+                ➕ Novo Cliente
+            </button>
+        </div>
 
-                    <div class="form-group">
-                        <label>📛 Nome Completo / Razão Social</label>
-                        <input id="nome" type="text" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label>🔢 CNPJ / CPF</label>
-                        <input id="documento" type="text" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label>📞 Telefone</label>
-                        <input id="telefone" type="tel" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label>📧 Email</label>
-                        <input id="email" type="email" required>
-                    </div>
-
-                    <div class="form-group full-width">
-                        <label>🏠 Endereço</label>
-                        <input id="endereco" type="text" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label>🏙️ Cidade</label>
-                        <input id="cidade" type="text" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label>🎌 Estado</label>
-                        <select id="estado" required>
-                            <option value="">Selecione...</option>
-                            <option value="SP">São Paulo</option>
-                            <option value="RJ">Rio de Janeiro</option>
-                            <option value="MG">Minas Gerais</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group full-width">
-                        <label>💬 Observações</label>
-                        <textarea id="obs" rows="3"></textarea>
-                    </div>
+        <div class="card">
+            <div class="toolbar">
+                <div class="search-box">
+                    <span>🔍</span>
+                    <input id="busca" type="text" placeholder="Buscar por nome, cidade ou documento...">
                 </div>
 
-                <div class="btn-group">
-                    <button type="button" class="btn btn-secondary" onclick="window.location.href='clientes.html'">↩️ Cancelar</button>
-                    <button type="submit" class="btn btn-primary" id="btnSalvar">💾 Salvar Cliente</button>
-                </div>
-            </form>
+                <div id="badgeCount" class="badge-count">0 clientes encontrados</div>
+            </div>
 
-            <div id="formMessage" class="form-message"></div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Cliente</th>
+                        <th>Cidade / UF</th>
+                        <th>Contato</th>
+                        <th>Documento</th>
+                        <th style="text-align:right;">Ações</th>
+                    </tr>
+                </thead>
 
-            <!-- Botão excluir aparece apenas no modo edição -->
-            <button id="btnExcluir" class="btn-delete" style="display:none;">🗑️ Excluir Cliente</button>
+                <tbody id="tbodyClientes"></tbody>
+            </table>
 
+            <div id="emptyState" class="empty-state" style="display:none;">
+                😕 Nenhum cliente cadastrado. Clique em <b>Novo Cliente</b> para começar.
+            </div>
         </div>
     </div>
 
-    <!-- =================================== -->
-    <!--     FIREBASE - CRUD CLIENTES        -->
-    <!-- =================================== -->
+    <!-- FIREBASE -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, set, get, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getDatabase, ref, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCjdryEhdWNcWZpcIciZApYdZX5jXcST3A",
@@ -157,88 +377,105 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        const params = new URLSearchParams(window.location.search);
-        const clienteId = params.get("id");
+        const tbody = document.getElementById("tbodyClientes");
+        const emptyState = document.getElementById("emptyState");
+        const badgeCount = document.getElementById("badgeCount");
+        const buscaInput = document.getElementById("busca");
 
-        const form = document.getElementById("clienteForm");
-        const msg = document.getElementById("formMessage");
-        const btnSalvar = document.getElementById("btnSalvar");
-        const btnExcluir = document.getElementById("btnExcluir");
+        let clientesCache = [];
 
-        // ================================
-        //  SE FOR EDIÇÃO → CARREGAR DADOS
-        // ================================
-        if (clienteId) {
-            btnSalvar.textContent = "💾 Salvar Alterações";
-            btnExcluir.style.display = "block";
-            carregarCliente(clienteId);
-        }
+        // Buscar clientes
+        const clientesRef = ref(db, "clientes");
 
-        function carregarCliente(id) {
-            get(ref(db, "clientes/" + id)).then(snapshot => {
-                if (!snapshot.exists()) return;
+        onValue(clientesRef, snapshot => {
+            clientesCache = [];
+            tbody.innerHTML = "";
 
-                const c = snapshot.val();
-                document.getElementById("nome").value = c.nome;
-                document.getElementById("documento").value = c.documento;
-                document.getElementById("telefone").value = c.telefone;
-                document.getElementById("email").value = c.email;
-                document.getElementById("endereco").value = c.endereco;
-                document.getElementById("cidade").value = c.cidade;
-                document.getElementById("estado").value = c.estado;
-                document.getElementById("obs").value = c.observacoes;
+            if (!snapshot.exists()) {
+                emptyState.style.display = "block";
+                badgeCount.textContent = "0 clientes encontrados";
+                return;
+            }
+
+            snapshot.forEach(child => {
+                clientesCache.push({ id: child.key, ...child.val() });
             });
+
+            renderTabela(clientesCache);
+        });
+
+        function renderTabela(lista) {
+            tbody.innerHTML = "";
+
+            if (lista.length === 0) {
+                emptyState.style.display = "block";
+                badgeCount.textContent = "0 clientes encontrados";
+                return;
+            } else {
+                emptyState.style.display = "none";
+            }
+
+            lista.forEach(c => {
+                const tr = document.createElement("tr");
+
+                tr.innerHTML = `
+                    <td data-label="Cliente">
+                        <strong>${c.nome || "-"}</strong><br>
+                        <span class="status-pill">${c.endereco || ""}</span>
+                    </td>
+
+                    <td data-label="Cidade/UF">
+                        <span class="tag-city">${c.cidade || "-"} ${c.estado ? " - " + c.estado : ""}</span>
+                    </td>
+
+                    <td data-label="Contato">
+                        📞 ${c.telefone || "-"} <br> 
+                        📧 ${c.email || "-"}
+                    </td>
+
+                    <td data-label="Documento">
+                        <span class="tag-doc">${c.documento}</span>
+                    </td>
+
+                    <td data-label="Ações" style="text-align:right;">
+                        <div class="actions">
+                            <button class="btn-sm btn-edit" onclick="editarCliente('${c.id}')">✏️ Editar</button>
+                            <button class="btn-sm btn-delete" onclick="excluirCliente('${c.id}')">🗑️ Excluir</button>
+                        </div>
+                    </td>
+                `;
+
+                tbody.appendChild(tr);
+            });
+
+            badgeCount.textContent = `${lista.length} cliente${lista.length > 1 ? "s" : ""} encontrado${lista.length > 1 ? "s" : ""}`;
         }
 
-        // ================================
-        //   CADASTRAR OU EDITAR CLIENTE
-        // ================================
-        form.addEventListener("submit", (e) => {
-            e.preventDefault();
+        buscaInput.addEventListener("input", () => {
+            const termo = buscaInput.value.toLowerCase();
 
-            const cliente = {
-                nome: document.getElementById("nome").value,
-                documento: document.getElementById("documento").value,
-                telefone: document.getElementById("telefone").value,
-                email: document.getElementById("email").value,
-                endereco: document.getElementById("endereco").value,
-                cidade: document.getElementById("cidade").value,
-                estado: document.getElementById("estado").value,
-                observacoes: document.getElementById("obs").value
-            };
+            if (!termo.trim()) return renderTabela(clientesCache);
 
-            const id = clienteId ? clienteId : Date.now();
+            const filtrados = clientesCache.filter(c => 
+                (c.nome || "").toLowerCase().includes(termo) ||
+                (c.cidade || "").toLowerCase().includes(termo) ||
+                (c.documento || "").toLowerCase().includes(termo)
+            );
 
-            set(ref(db, "clientes/" + id), cliente)
-                .then(() => {
-                    msg.className = "form-message success";
-                    msg.textContent = clienteId ? "✔ Alterações salvas!" : "✔ Cliente cadastrado!";
-                    msg.style.display = "block";
-
-                    setTimeout(() => window.location.href = "clientes.html", 1500);
-                })
-                .catch(err => {
-                    msg.className = "form-message error";
-                    msg.textContent = "❌ Erro: " + err;
-                    msg.style.display = "block";
-                });
+            renderTabela(filtrados);
         });
 
-        // ================================
-        //        EXCLUIR CLIENTE
-        // ================================
-        btnExcluir.addEventListener("click", () => {
-            if (!confirm("Tem certeza que deseja excluir este cliente?")) return;
+        window.editarCliente = function(id) {
+            window.location.href = `cadastrar-cliente.html?id=${id}`;
+        };
 
-            remove(ref(db, "clientes/" + clienteId))
-                .then(() => {
-                    alert("Cliente excluído com sucesso!");
-                    window.location.href = "clientes.html";
-                })
+        window.excluirCliente = function(id) {
+            if (!confirm("Excluir cliente definitivamente?")) return;
+
+            remove(ref(db, "clientes/" + id))
+                .then(() => alert("Cliente removido com sucesso!"))
                 .catch(err => alert("Erro ao excluir: " + err));
-        });
-
+        };
     </script>
-
 </body>
 </html>

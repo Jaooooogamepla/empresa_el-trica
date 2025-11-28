@@ -1,4 +1,3 @@
-<!-- relatorios.html -->
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -16,8 +15,7 @@
         body {
             background:#f4f6f9;
         }
-
-        /* NAVBAR */
+        
         .navbar {
             background:linear-gradient(135deg, #2c3e50, #34495e);
             padding:15px 0;
@@ -58,7 +56,6 @@
             background:rgba(255,255,255,0.22);
         }
 
-        /* CONTEÚDO */
         .container {
             max-width:1100px;
             margin:35px auto;
@@ -70,7 +67,6 @@
             margin-bottom:20px;
         }
 
-        /* CARD */
         .card {
             background:white;
             padding:25px;
@@ -127,7 +123,6 @@
 
 <body>
 
-    <!-- NAVBAR -->
     <nav class="navbar">
         <div class="nav-content">
             <div class="logo" onclick="window.location.href='dashboard.html'">🏗️ JANOL.INEJ</div>
@@ -150,14 +145,12 @@
             0 relatórios gerados
         </div>
 
-        <!-- RELATÓRIO FINANCEIRO -->
         <div class="card">
             <h3>📊 Relatório Financeiro</h3>
             <p>Análise de faturamento, despesas e custo operacional.</p>
             <button class="btn" id="btnFinanceiro">Gerar Relatório</button>
         </div>
 
-        <!-- RELATÓRIO PRODUTIVIDADE -->
         <div class="card">
             <h3>👥 Relatório de Produtividade</h3>
             <p>Avaliação do desempenho e execução das equipes.</p>
@@ -166,7 +159,6 @@
 
     </div>
 
-    <!-- ===== FIREBASE ===== -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
@@ -189,7 +181,6 @@
         const btnProd       = document.getElementById("btnProdutividade");
         const contador      = document.getElementById("contador");
 
-        // Atualizar contador de relatórios gerados
         onValue(ref(db, "relatorios"), snap => {
             if (!snap.exists()) {
                 contador.textContent = "0 relatórios gerados";
@@ -200,8 +191,6 @@
 
             contador.textContent = `${total} relatório${total > 1 ? "s" : ""} gerado${total > 1 ? "s" : ""}`;
         });
-
-        // Gerar relatório financeiro
         btnFinanceiro.addEventListener("click", () => {
             set(ref(db, "relatorios/financeiro/" + Date.now()), {
                 tipo: "Financeiro",
@@ -211,7 +200,6 @@
             });
         });
 
-        // Gerar relatório de produtividade
         btnProd.addEventListener("click", () => {
             set(ref(db, "relatorios/produtividade/" + Date.now()), {
                 tipo: "Produtividade",
